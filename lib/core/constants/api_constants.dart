@@ -3,7 +3,7 @@ abstract final class ApiConstants {
   /// Override at build/run time: `--dart-define=API_BASE_URL=http://10.0.2.2:3000/v1`
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:3000/v1',
+    defaultValue: 'https://super-star-platform-backend.onrender.com/v1',
   );
 
   /// Set `USE_MOCK_API=true` to use in-memory demo data without a backend.

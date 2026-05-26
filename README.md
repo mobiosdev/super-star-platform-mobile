@@ -26,7 +26,7 @@ REST endpoints match `postman/SuperStar_Platform_API.postman_collection.json`.
 Default base URL (local backend):
 
 ```text
-http://localhost:3000/v1
+https://super-star-platform-backend.onrender.com/v1
 ```
 
 Override at run/build time:
