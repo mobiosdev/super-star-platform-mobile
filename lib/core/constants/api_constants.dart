@@ -1,13 +1,12 @@
+import '../config/env_config.dart';
+
 /// REST paths aligned with `postman/SuperStar_Platform_API.postman_collection.json`.
 abstract final class ApiConstants {
   /// Override at build/run time: `--dart-define=API_BASE_URL=http://10.0.2.2:3000/v1`
-  static const String baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'https://super-star-platform-backend.onrender.com/v1',
-  );
+  static String get baseUrl => EnvConfig.apiBaseUrl;
 
   /// Set `USE_MOCK_API=true` to use in-memory demo data without a backend.
-  static const bool useMockApi = bool.fromEnvironment('USE_MOCK_API', defaultValue: false);
+  static bool get useMockApi => EnvConfig.useMockApi;
 
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);

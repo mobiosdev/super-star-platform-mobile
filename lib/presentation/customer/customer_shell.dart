@@ -28,6 +28,7 @@ class _CustomerShellState extends State<CustomerShell> {
         !location.contains('/notifications');
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: widget.child,
       bottomNavigationBar: showNav
           ? RoleBottomNav(

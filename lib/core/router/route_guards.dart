@@ -9,13 +9,16 @@ String? authRedirect(BuildContext context, GoRouterState state, Ref ref) {
   final isLoggingIn = state.matchedLocation == '/login';
   final user = auth.valueOrNull;
 
-  if (auth.isLoading) return null;
+  if (auth.isLoading) {
+    return state.matchedLocation == '/loading' ? null : '/loading';
+  }
 
   if (user == null) {
     return isLoggingIn ? null : '/login';
   }
 
-  if (isLoggingIn) {
+  final onAuthGate = isLoggingIn || state.matchedLocation == '/loading';
+  if (onAuthGate) {
     return user.role.homeRoute;
   }
 

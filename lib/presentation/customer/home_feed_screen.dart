@@ -83,10 +83,11 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
     if (feedState.posts.isEmpty) {
       return EmptyState(
         title: 'Your feed is empty',
-        subtitle: 'Subscribe to Superstars to see their latest posts',
+        subtitle:
+            'No posts yet. Subscribe to a Superstar in Explore, or ask an admin to add verified creators to the platform.',
         icon: Icons.rss_feed_rounded,
         action: () => context.push('/customer/explore'),
-        actionLabel: 'Discover creators',
+        actionLabel: 'Explore',
       );
     }
 

@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import '../../presentation/providers/auth_provider.dart';
 import '../../presentation/admin/admin_shell.dart';
 import '../../presentation/admin/content_review_screen.dart';
+import '../../presentation/auth/auth_loading_screen.dart';
 import '../../presentation/auth/login_screen.dart';
 import '../../presentation/creator/creator_shell.dart';
 import '../../presentation/customer/customer_shell.dart';
+import '../../presentation/shared/account_profile_screen.dart';
 import '../../presentation/shared/placeholder_screen.dart';
 import '../../presentation/superadmin/superadmin_shell.dart';
 import 'route_guards.dart';
@@ -17,6 +19,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: _AuthRefreshListenable(ref),
     redirect: (context, state) => authRedirect(context, state, ref),
     routes: [
+      GoRoute(path: '/loading', builder: (_, __) => const AuthLoadingScreen()),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       ShellRoute(
         builder: (_, __, child) => CustomerShell(child: child),
@@ -37,7 +40,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/customer/profile',
-            builder: (_, __) => const PlaceholderScreen(title: 'My Profile', showBack: false),
+            builder: (_, __) => const AccountProfileScreen(showBack: false),
           ),
           GoRoute(
             path: '/customer/profile/:id',

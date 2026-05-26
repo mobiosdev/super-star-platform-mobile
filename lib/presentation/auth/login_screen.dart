@@ -29,6 +29,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscure = true;
 
   @override
+  void initState() {
+    super.initState();
+    ref.listenManual(authStateProvider, (previous, next) {
+      final user = next.valueOrNull;
+      if (user != null && mounted) {
+        context.go(user.role.homeRoute);
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -53,6 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = auth.isLoading;
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),

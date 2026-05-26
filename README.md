@@ -39,8 +39,24 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3000/v1
 flutter run --dart-define=USE_MOCK_API=true
 ```
 
-**Android emulator:** use `10.0.2.2` instead of `localhost`.  
+**Android emulator:** use `10.0.2.2` instead of `localhost` (maps to your PC). Debug builds allow HTTP to the host; release uses HTTPS only.
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3000/v1
+```
+
+**Physical Android device** (same Wi‑Fi as your PC): use your PC’s LAN IP, e.g. `http://192.168.1.42:3000/v1`.
+
 **iOS simulator:** `localhost` works.
+
+### “Failed host lookup” on emulator
+
+The API URL in code is correct (`https://super-star-platform-backend.onrender.com/v1/auth/login`). That error means the **emulator cannot resolve DNS** (no internet), not a wrong path.
+
+1. In the emulator, open **Chrome** → visit `https://google.com`. If it fails, fix emulator networking (cold boot AVD, disable VPN on PC, use a **Google Play** system image).
+2. **Full restart** after manifest changes: stop the app → `flutter run` (not hot reload).
+3. Confirm Render is up: open `https://super-star-platform-backend.onrender.com/v1/health` in your PC browser.
+4. VS Code: run **“Flutter (Render API)”** from `.vscode/launch.json`.
 
 ### First-time setup
 

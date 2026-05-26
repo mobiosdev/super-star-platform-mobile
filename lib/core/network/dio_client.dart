@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../config/env_config.dart';
 import '../constants/api_constants.dart';
 import '../storage/local_storage.dart';
 import 'api_exception.dart';
@@ -25,6 +27,15 @@ class DioClient {
         },
       ),
     );
+    if (kDebugMode) {
+      _dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          logPrint: (o) => debugPrint(o.toString()),
+        ),
+      );
+    }
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -141,6 +152,19 @@ class DioClient {
     final status = e.response?.statusCode;
     final body = e.response?.data;
     var message = e.message ?? 'Network error';
+
+    if (e.type == DioExceptionType.connectionError ||
+        e.type == DioExceptionType.unknown) {
+      final underlying = e.error?.toString() ?? '';
+      if (underlying.contains('Failed host lookup') ||
+          underlying.contains('SocketException') ||
+          message.contains('Failed host lookup')) {
+        message =
+            'Cannot reach the API server (${EnvConfig.apiBaseUrl}). '
+            'On Android emulator: open Chrome and check internet, then cold-boot the AVD. '
+            'For local backend use: --dart-define=API_BASE_URL=http://10.0.2.2:3000/v1';
+      }
+    }
 
     if (body is Map) {
       if (body['message'] != null) {
