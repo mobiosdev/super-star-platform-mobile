@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/api_constants.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/network/api_exception.dart';
 import '../../core/constants/light_blue_theme.dart';
 import '../../core/widgets/gradient_cta_button.dart';
 import '../../domain/entities/user_role.dart';
@@ -13,6 +15,11 @@ class LoginScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+String _errorMessage(Object? error) {
+  if (error is ApiException) return error.message;
+  return error?.toString() ?? 'Sign in failed';
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
@@ -96,6 +103,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   validator: (v) =>
                       v == null || v.length < 6 ? 'Password must be at least 6 characters' : null,
                 ),
+                if (auth.hasError) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    _errorMessage(auth.error),
+                    style: GoogleFonts.poppins(color: AppColors.error, fontSize: 13),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
                 const SizedBox(height: 24),
                 GradientCtaButton(
                   label: 'Sign In',
@@ -122,6 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     _SocialButton(icon: Icons.apple, label: 'Apple'),
                   ],
                 ),
+                if (ApiConstants.useMockApi) ...[
                 const SizedBox(height: 32),
                 Text('Quick demo login', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 12),
@@ -146,6 +162,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textSecondary),
                   textAlign: TextAlign.center,
                 ),
+                ],
               ],
             ),
           ),

@@ -1,14 +1,96 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/constants/api_constants.dart';
 import '../../domain/entities/moderation_item.dart';
 import '../../domain/entities/subscription_tier.dart';
 import '../../domain/repositories/moderation_repository.dart';
+import '../api/platform_api.dart';
 
 final moderationRepositoryProvider = Provider<ModerationRepository>((ref) {
-  return ModerationRepositoryImpl();
+  return ModerationRepositoryImpl(ref.watch(platformApiProvider));
 });
 
 class ModerationRepositoryImpl implements ModerationRepository {
+  ModerationRepositoryImpl(this._api);
+
+  final PlatformApi _api;
+  final _controller = StreamController<List<ModerationItem>>.broadcast();
+
+  @override
+  Future<List<ModerationItem>> fetchQueue({
+    int page = 1,
+    int limit = 20,
+    String? search,
+    SubscriptionTier? tierFilter,
+  }) async {
+    if (ApiConstants.useMockApi) {
+      return _MockModerationStore.instance.fetchQueue(
+        page: page,
+        limit: limit,
+        search: search,
+        tierFilter: tierFilter,
+      );
+    }
+
+    final items = await _api.getModerationQueue(page: page, limit: limit);
+    var mapped = items.map((dto) => dto.toEntity()).toList();
+
+    if (search != null && search.isNotEmpty) {
+      final q = search.toLowerCase();
+      mapped = mapped
+          .where(
+            (e) =>
+                e.superstarName.toLowerCase().contains(q) ||
+                e.title.toLowerCase().contains(q),
+          )
+          .toList();
+    }
+
+    if (tierFilter != null) {
+      mapped = mapped.where((e) => e.tier == tierFilter).toList();
+    }
+
+    mapped.sort((a, b) => a.submittedAt.compareTo(b.submittedAt));
+    _controller.add(mapped);
+    return mapped;
+  }
+
+  @override
+  Future<void> approve(String id) async {
+    if (ApiConstants.useMockApi) {
+      return _MockModerationStore.instance.approve(id);
+    }
+    await _api.approveContent(id, note: 'Approved from mobile app');
+  }
+
+  @override
+  Future<void> reject(String id, {String? reason}) async {
+    if (ApiConstants.useMockApi) {
+      return _MockModerationStore.instance.reject(id);
+    }
+    await _api.rejectContent(
+      id,
+      reasonText: reason ?? 'Rejected from mobile moderation',
+    );
+  }
+
+  @override
+  Future<void> escalate(String id) async {
+    if (ApiConstants.useMockApi) {
+      return _MockModerationStore.instance.escalate(id);
+    }
+    await _api.claimModeration(id);
+  }
+
+  @override
+  Stream<List<ModerationItem>> watchQueueUpdates() => _controller.stream;
+}
+
+/// In-memory queue used when `USE_MOCK_API=true`.
+class _MockModerationStore {
+  _MockModerationStore._();
+  static final instance = _MockModerationStore._();
+
   final List<ModerationItem> _cache = _generateMockQueue(25);
   final _controller = StreamController<List<ModerationItem>>.broadcast();
 
@@ -31,7 +113,6 @@ class ModerationRepositoryImpl implements ModerationRepository {
     });
   }
 
-  @override
   Future<List<ModerationItem>> fetchQueue({
     int page = 1,
     int limit = 20,
@@ -53,19 +134,16 @@ class ModerationRepositoryImpl implements ModerationRepository {
     return items.skip(start).take(limit).toList();
   }
 
-  @override
   Future<void> approve(String id) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     _updateStatus(id, ModerationStatus.approved);
   }
 
-  @override
-  Future<void> reject(String id, {String? reason}) async {
+  Future<void> reject(String id) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     _updateStatus(id, ModerationStatus.rejected);
   }
 
-  @override
   Future<void> escalate(String id) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     _updateStatus(id, ModerationStatus.escalated);
@@ -89,7 +167,4 @@ class ModerationRepositoryImpl implements ModerationRepository {
     );
     _controller.add(_cache.where((e) => e.status == ModerationStatus.pending).toList());
   }
-
-  @override
-  Stream<List<ModerationItem>> watchQueueUpdates() => _controller.stream;
 }

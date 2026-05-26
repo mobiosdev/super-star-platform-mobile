@@ -1,0 +1,629 @@
+{
+  "info": {
+    "name": "SuperStar Platform API v1",
+    "description": "Complete REST API collection for SuperStar Platform backend.\n\nBase URL: {{baseUrl}}\n\n1. Run **Auth > Login** (or Register) first.\n2. Copy `access_token` from response into collection variable `accessToken`.\n3. Protected requests use Bearer auth automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/v1" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "superstarId", "value": "" },
+    { "key": "contentId", "value": "" },
+    { "key": "planId", "value": "" },
+    { "key": "subscriptionId", "value": "" },
+    { "key": "pollId", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (Customer)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"fan@example.com\",\n  \"password\": \"MyP@ssw0rd!\",\n  \"full_name\": \"Amal Fernando\",\n  \"role\": \"CUSTOMER\",\n  \"phone\": \"+94771234567\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register (Superstar)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"artist@example.com\",\n  \"password\": \"MyP@ssw0rd!\",\n  \"full_name\": \"Malsha De Silva\",\n  \"role\": \"SUPERSTAR\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data?.access_token) {",
+                  "  pm.collectionVariables.set('accessToken', json.data.access_token);",
+                  "  pm.collectionVariables.set('refreshToken', json.data.refresh_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"fan@example.com\",\n  \"password\": \"MyP@ssw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/logout"
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"fan@example.com\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/forgot-password"
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"rst_YOUR_TOKEN_FROM_EMAIL_OR_LOGS\",\n  \"new_password\": \"NewP@ssw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/reset-password"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User (me)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/users/me" }
+        },
+        {
+          "name": "Update Current User (me)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Amal Fernando Updated\",\n  \"phone\": \"+94771234568\"\n}"
+            },
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "Update Password (me)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"MyP@ssw0rd!\",\n  \"new_password\": \"NewP@ssw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "List Users (Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users?role=CUSTOMER&status=ACTIVE&search=amal&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "role", "value": "CUSTOMER", "description": "ADMIN | SUPERSTAR | CUSTOMER" },
+                { "key": "status", "value": "ACTIVE", "description": "ACTIVE | SUSPENDED | BANNED" },
+                { "key": "search", "value": "amal" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User Status (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SUSPENDED\",\n  \"reason\": \"Violation of community guidelines\"\n}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Superstars",
+      "item": [
+        {
+          "name": "List Superstars",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/superstars?search=malsha&category=SINGER&verified=true&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["superstars"],
+              "query": [
+                { "key": "search", "value": "malsha" },
+                { "key": "category", "value": "SINGER", "description": "SINGER | ACTOR | ATHLETE | INFLUENCER | OTHER" },
+                { "key": "verified", "value": "true" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Superstar Profile",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/superstars/{{superstarId}}"
+          }
+        },
+        {
+          "name": "Get Subscription Plans",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/superstars/{{superstarId}}/plans"
+          }
+        },
+        {
+          "name": "Update Superstar Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"display_name\": \"Malsha De Silva\",\n  \"bio\": \"Award-winning pop artist. New album OUT NOW!\",\n  \"category\": \"SINGER\",\n  \"social_links\": {\n    \"instagram\": \"https://instagram.com/malsha\",\n    \"twitter\": \"https://twitter.com/malsha\",\n    \"youtube\": \"https://youtube.com/malsha\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/superstars/{{superstarId}}"
+          }
+        },
+        {
+          "name": "Upload Avatar",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "src": "" }]
+            },
+            "url": "{{baseUrl}}/superstars/{{superstarId}}/avatar"
+          }
+        },
+        {
+          "name": "Upload Cover Photo",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "src": "" }]
+            },
+            "url": "{{baseUrl}}/superstars/{{superstarId}}/cover"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "item": [
+        {
+          "name": "Create Content",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Studio Session — Track 3 Exclusive\",\n  \"body\": \"Here's a sneak peek from yesterday's recording session!\",\n  \"content_type\": \"VIDEO_HD\",\n  \"tier_required\": \"PLATINUM\",\n  \"is_downloadable\": false,\n  \"scheduled_at\": null,\n  \"tags\": [\"studio\", \"exclusive\", \"behindthescenes\"]\n}"
+            },
+            "url": "{{baseUrl}}/content"
+          }
+        },
+        {
+          "name": "Upload Content Media",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "" },
+                { "key": "media_type", "value": "VIDEO", "description": "IMAGE | VIDEO | AUDIO | DOCUMENT" },
+                { "key": "position", "value": "0" }
+              ]
+            },
+            "url": "{{baseUrl}}/content/{{contentId}}/media"
+          }
+        },
+        {
+          "name": "Get Feed (Public / Optional Auth)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/feed/{{superstarId}}?content_type=VIDEO_HD&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["feed", "{{superstarId}}"],
+              "query": [
+                { "key": "content_type", "value": "VIDEO_HD" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Content",
+          "request": { "method": "GET", "url": "{{baseUrl}}/content/{{contentId}}" }
+        },
+        {
+          "name": "Update Content",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\",\n  \"body\": \"Updated body text\",\n  \"tier_required\": \"GOLD\",\n  \"scheduled_at\": \"2026-06-01T10:00:00Z\",\n  \"tags\": [\"updated\", \"exclusive\"]\n}"
+            },
+            "url": "{{baseUrl}}/content/{{contentId}}"
+          }
+        },
+        {
+          "name": "Delete Content",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/content/{{contentId}}" }
+        },
+        {
+          "name": "List Superstar Content (Dashboard)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/superstars/{{superstarId}}/content?status=PENDING&content_type=VIDEO_HD&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["superstars", "{{superstarId}}", "content"],
+              "query": [
+                { "key": "status", "value": "PENDING", "description": "DRAFT | PENDING | APPROVED | REJECTED | PUBLISHED | ARCHIVED" },
+                { "key": "content_type", "value": "VIDEO_HD" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Moderation",
+      "item": [
+        {
+          "name": "Get Moderation Queue",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/moderation/queue?status=PENDING&superstar_id={{superstarId}}&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["moderation", "queue"],
+              "query": [
+                { "key": "status", "value": "PENDING", "description": "PENDING | UNDER_REVIEW | APPEALED" },
+                { "key": "superstar_id", "value": "{{superstarId}}" },
+                { "key": "content_type", "value": "VIDEO_HD", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Claim Content",
+          "request": { "method": "POST", "url": "{{baseUrl}}/moderation/{{contentId}}/claim" }
+        },
+        {
+          "name": "Approve Content",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Looks great — approved for publish.\"\n}"
+            },
+            "url": "{{baseUrl}}/moderation/{{contentId}}/approve"
+          }
+        },
+        {
+          "name": "Reject Content",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason_code\": \"COPYRIGHT_ISSUE\",\n  \"reason_text\": \"This video contains audio that may infringe a third-party copyright.\"\n}"
+            },
+            "url": "{{baseUrl}}/moderation/{{contentId}}/reject"
+          }
+        },
+        {
+          "name": "Appeal Rejection (Superstar)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appeal_text\": \"I have obtained the proper license for this track. Please review again.\"\n}"
+            },
+            "url": "{{baseUrl}}/moderation/{{contentId}}/appeal"
+          }
+        },
+        {
+          "name": "Bulk Moderate",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content_ids\": [\"cnt_ID_1\", \"cnt_ID_2\"],\n  \"action\": \"APPROVE\",\n  \"reason_code\": \"OTHER\",\n  \"reason_text\": \"Batch rejection reason (required when action is REJECT)\"\n}"
+            },
+            "url": "{{baseUrl}}/moderation/bulk"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "Create Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_id\": \"{{planId}}\",\n  \"billing_cycle\": \"monthly\",\n  \"success_url\": \"https://yourapp.com/subscription/success\",\n  \"cancel_url\": \"https://yourapp.com/subscription/cancel\"\n}"
+            },
+            "url": "{{baseUrl}}/subscriptions/checkout"
+          }
+        },
+        {
+          "name": "Get My Subscriptions",
+          "request": { "method": "GET", "url": "{{baseUrl}}/subscriptions/me" }
+        },
+        {
+          "name": "Cancel Subscription",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Too expensive for now\"\n}"
+            },
+            "url": "{{baseUrl}}/subscriptions/{{subscriptionId}}/cancel"
+          }
+        },
+        {
+          "name": "Change Plan",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"new_plan_id\": \"{{planId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/subscriptions/{{subscriptionId}}/change-plan"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engagement",
+      "item": [
+        {
+          "name": "Like / Unlike Content",
+          "request": { "method": "POST", "url": "{{baseUrl}}/content/{{contentId}}/like" }
+        },
+        {
+          "name": "Add Comment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"This is amazing!\",\n  \"parent_id\": null\n}"
+            },
+            "url": "{{baseUrl}}/content/{{contentId}}/comments"
+          }
+        },
+        {
+          "name": "Get Comments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/content/{{contentId}}/comments?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["content", "{{contentId}}", "comments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Poll",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Which city should I tour next?\",\n  \"options\": [\"Colombo\", \"Kandy\", \"Galle\", \"Jaffna\"],\n  \"tier_required\": \"SILVER\",\n  \"expires_at\": \"2026-06-27T23:59:59Z\"\n}"
+            },
+            "url": "{{baseUrl}}/superstars/{{superstarId}}/polls"
+          }
+        },
+        {
+          "name": "Vote on Poll",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"option_index\": 0\n}"
+            },
+            "url": "{{baseUrl}}/polls/{{pollId}}/vote"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send DM (Superstar)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipient_id\": \"{{userId}}\",\n  \"body\": \"Thank you for being a Platinum subscriber!\",\n  \"media_url\": null\n}"
+            },
+            "url": "{{baseUrl}}/messages"
+          }
+        },
+        {
+          "name": "Get Inbox",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/messages/inbox?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", "inbox"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Superstar Overview",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/analytics/superstars/{{superstarId}}/overview?period=30d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "superstars", "{{superstarId}}", "overview"],
+              "query": [{ "key": "period", "value": "30d", "description": "7d | 30d | 90d | 1y" }]
+            }
+          }
+        },
+        {
+          "name": "Content Analytics",
+          "request": { "method": "GET", "url": "{{baseUrl}}/analytics/content/{{contentId}}" }
+        },
+        {
+          "name": "Platform Overview (Superadmin)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/analytics/platform" }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Stripe Webhook",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Stripe-Signature", "value": "whsec_signature_from_stripe" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"evt_test\",\n  \"type\": \"checkout.session.completed\",\n  \"data\": { \"object\": {} }\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/stripe"
+          }
+        }
+      ]
+    }
+  ]
+}
