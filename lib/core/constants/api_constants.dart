@@ -8,8 +8,8 @@ abstract final class ApiConstants {
   /// Set `USE_MOCK_API=true` to use in-memory demo data without a backend.
   static bool get useMockApi => EnvConfig.useMockApi;
 
-  static const Duration connectTimeout = Duration(seconds: 30);
-  static const Duration receiveTimeout = Duration(seconds: 30);
+  static const Duration connectTimeout = Duration(seconds: 60);
+  static const Duration receiveTimeout = Duration(seconds: 60);
 
   // Health
   static const String health = '/health';

@@ -123,8 +123,8 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
                       child: ContentCard(
                         post: post,
                         onUpgrade: () => UpgradePromptModal.show(context),
-                        onTap: () => context.push('/customer/player/${post.id}'),
-                        onProfileTap: () => context.push('/customer/profile/${post.superstarId}'),
+                        onTap: () => context.push('/content/${post.id}'),
+                        onProfileTap: () => context.push('/superstar/${post.superstarId}'),
                       ),
                     ),
                   );

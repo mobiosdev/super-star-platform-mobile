@@ -148,6 +148,18 @@ class DioClient {
     }
   }
 
+  Future<Response<T>> postFormData<T>(String path, FormData data) async {
+    try {
+      return await _dio.post<T>(
+        path,
+        data: data,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+    } on DioException catch (e) {
+      throw _mapError(e);
+    }
+  }
+
   ApiException _mapError(DioException e) {
     final status = e.response?.statusCode;
     final body = e.response?.data;

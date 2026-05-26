@@ -23,6 +23,7 @@ dependencies:
   # Add flutter_stripe when implementing payments (requires Kotlin 2.1+ / AGP 8.5+)
   cached_network_image: ^3.3.1
   flutter_animate: ^4.5.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

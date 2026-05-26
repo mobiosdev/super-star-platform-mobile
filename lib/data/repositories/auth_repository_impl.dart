@@ -33,14 +33,7 @@ class AuthRepositoryImpl implements AuthRepository {
         ? tokens.user!.toEntity()
         : (await _api.getCurrentUser()).toEntity();
 
-    await _storage.saveSession(
-      access: tokens.accessToken,
-      refresh: tokens.refreshToken,
-      role: user.role,
-      userId: user.id,
-      email: user.email,
-    );
-    return user;
+    return _persistUser(user, tokens.accessToken, tokens.refreshToken);
   }
 
   @override
@@ -65,14 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
         ? tokens.user!.toEntity()
         : (await _api.getCurrentUser()).toEntity();
 
-    await _storage.saveSession(
-      access: tokens.accessToken,
-      refresh: tokens.refreshToken,
-      role: user.role,
-      userId: user.id,
-      email: user.email,
-    );
-    return user;
+    return _persistUser(user, tokens.accessToken, tokens.refreshToken);
   }
 
   @override
@@ -106,12 +92,10 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final dto = await _api.getCurrentUser();
       final user = dto.toEntity();
-      await _storage.saveSession(
-        access: _storage.getAccessToken()!,
-        refresh: _storage.getRefreshToken() ?? '',
-        role: user.role,
-        userId: user.id,
-        email: user.email,
+      await _persistUser(
+        user,
+        _storage.getAccessToken()!,
+        _storage.getRefreshToken() ?? '',
       );
       return user;
     } on ApiException {
@@ -148,6 +132,29 @@ class AuthRepositoryImpl implements AuthRepository {
       email: email,
     );
     return user;
+  }
+
+  Future<AppUser> _persistUser(AppUser user, String access, String refresh) async {
+    String? superstarId = user.superstarId;
+    if (user.role == UserRole.superstar && (superstarId == null || superstarId.isEmpty)) {
+      superstarId = await _api.resolveSuperstarId(userId: user.id, knownSuperstarId: null);
+    }
+    await _storage.saveSession(
+      access: access,
+      refresh: refresh,
+      role: user.role,
+      userId: user.id,
+      email: user.email,
+      superstarId: superstarId,
+    );
+    return AppUser(
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      role: user.role,
+      avatarUrl: user.avatarUrl,
+      superstarId: superstarId,
+    );
   }
 
   UserRole _roleFromEmail(String email) {

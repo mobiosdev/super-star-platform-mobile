@@ -16,6 +16,7 @@ class LocalStorage {
   static const String _roleKey = 'user_role';
   static const String _userIdKey = 'user_id';
   static const String _emailKey = 'email';
+  static const String _superstarIdKey = 'superstar_id';
 
   Box<dynamic>? _box;
 
@@ -42,6 +43,7 @@ class LocalStorage {
 
   String? getUserId() => box.get(_userIdKey) as String?;
   String? getEmail() => box.get(_emailKey) as String?;
+  String? getSuperstarId() => box.get(_superstarIdKey) as String?;
 
   Future<void> saveTokens({required String access, required String refresh}) async {
     await box.put(_accessTokenKey, access);
@@ -54,11 +56,19 @@ class LocalStorage {
     required UserRole role,
     required String userId,
     required String email,
+    String? superstarId,
   }) async {
     await saveTokens(access: access, refresh: refresh);
     await box.put(_roleKey, role.name);
     await box.put(_userIdKey, userId);
     await box.put(_emailKey, email);
+    if (superstarId != null) {
+      await box.put(_superstarIdKey, superstarId);
+    }
+  }
+
+  Future<void> saveSuperstarId(String id) async {
+    await box.put(_superstarIdKey, id);
   }
 
   Future<void> clearSession() async {
@@ -67,6 +77,7 @@ class LocalStorage {
     await box.delete(_roleKey);
     await box.delete(_userIdKey);
     await box.delete(_emailKey);
+    await box.delete(_superstarIdKey);
   }
 
   bool get isLoggedIn => getAccessToken() != null && getRole() != null;

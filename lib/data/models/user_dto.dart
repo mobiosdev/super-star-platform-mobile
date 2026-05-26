@@ -9,6 +9,7 @@ class UserDto {
     required this.role,
     this.avatarUrl,
     this.phone,
+    this.superstarId,
   });
 
   final String id;
@@ -17,8 +18,14 @@ class UserDto {
   final String role;
   final String? avatarUrl;
   final String? phone;
+  final String? superstarId;
 
   factory UserDto.fromJson(Map<String, dynamic> json) {
+    final superstar = json['superstar'];
+    String? ssId = json['superstar_id'] as String?;
+    if (ssId == null && superstar is Map) {
+      ssId = superstar['id']?.toString();
+    }
     return UserDto(
       id: (json['id'] ?? json['user_id'] ?? '').toString(),
       email: (json['email'] ?? '').toString(),
@@ -26,6 +33,7 @@ class UserDto {
       role: (json['role'] ?? 'CUSTOMER').toString().toUpperCase(),
       avatarUrl: json['avatar_url'] as String? ?? json['avatarUrl'] as String?,
       phone: json['phone'] as String?,
+      superstarId: ssId,
     );
   }
 
@@ -36,6 +44,7 @@ class UserDto {
       displayName: fullName.isNotEmpty ? fullName : email.split('@').first,
       role: _parseRole(role),
       avatarUrl: avatarUrl,
+      superstarId: superstarId,
     );
   }
 

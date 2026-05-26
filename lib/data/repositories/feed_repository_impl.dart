@@ -59,11 +59,8 @@ class FeedRepositoryImpl implements FeedRepository {
     } catch (_) {}
 
     try {
-      final stars = await _api.listSuperstars(page: 1, limit: 5, verified: true);
-      return stars
-          .map((s) => (s['id'] ?? '').toString())
-          .where((id) => id.isNotEmpty)
-          .toList();
+      final stars = await _api.listSuperstars(page: 1, limit: 10);
+      return stars.map((s) => s.id).where((id) => id.isNotEmpty).toList();
     } catch (_) {
       return [];
     }

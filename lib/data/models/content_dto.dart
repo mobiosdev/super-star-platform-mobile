@@ -18,6 +18,7 @@ class ContentDto {
     this.createdAt,
     this.isLocked = false,
     this.userTier,
+    this.status,
   });
 
   final String id;
@@ -35,6 +36,7 @@ class ContentDto {
   final DateTime? createdAt;
   final bool isLocked;
   final String? userTier;
+  final String? status;
 
   factory ContentDto.fromJson(Map<String, dynamic> json) {
     final superstar = json['superstar'];
@@ -76,6 +78,7 @@ class ContentDto {
       createdAt: _parseDate(json['created_at'] ?? json['published_at']),
       isLocked: json['is_locked'] == true || json['locked'] == true,
       userTier: json['user_tier'] as String?,
+      status: json['status'] as String?,
     );
   }
 

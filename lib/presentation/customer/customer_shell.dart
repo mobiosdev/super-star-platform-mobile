@@ -23,9 +23,7 @@ class _CustomerShellState extends State<CustomerShell> {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     final index = _indexFromLocation(location);
-    final showNav = !location.contains('/player') &&
-        !location.contains('/messages') &&
-        !location.contains('/notifications');
+    final showNav = !location.contains('/messages') && !location.contains('/notifications');
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

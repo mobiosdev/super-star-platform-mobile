@@ -8,6 +8,7 @@ class AppUser extends Equatable {
     required this.displayName,
     required this.role,
     this.avatarUrl,
+    this.superstarId,
   });
 
   final String id;
@@ -15,7 +16,8 @@ class AppUser extends Equatable {
   final String displayName;
   final UserRole role;
   final String? avatarUrl;
+  final String? superstarId;
 
   @override
-  List<Object?> get props => [id, email, role];
+  List<Object?> get props => [id, email, role, superstarId];
 }
