@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/app_colors.dart';
 import '../../core/widgets/gradient_cta_button.dart';
+import '../../core/widgets/logout_button.dart';
 import '../../core/widgets/role_bottom_nav.dart';
+import '../../core/widgets/superstar_app_bar.dart';
 class CreatorShell extends StatelessWidget {
   const CreatorShell({super.key, required this.child});
   final Widget child;
@@ -13,22 +16,34 @@ class CreatorShell extends StatelessWidget {
     if (location.contains('/creator/library')) index = 1;
     if (location.contains('/creator/analytics')) index = 2;
     if (location.contains('/creator/plans')) index = 3;
+    if (location.contains('/creator/profile')) index = 4;
+
+    final showNav = !location.contains('/creator/upload') && !location.contains('/creator/live');
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: RoleBottomNav(
-        currentIndex: index,
-        onTap: (i) {
-          const routes = ['/creator', '/creator/library', '/creator/analytics', '/creator/plans'];
-          context.go(routes[i]);
-        },
-        items: const [
-          BottomNavItem(icon: Icons.dashboard_outlined, selectedIcon: Icons.dashboard, label: 'Studio'),
-          BottomNavItem(icon: Icons.video_library_outlined, selectedIcon: Icons.video_library, label: 'Library'),
-          BottomNavItem(icon: Icons.insights_outlined, selectedIcon: Icons.insights, label: 'Analytics'),
-          BottomNavItem(icon: Icons.payments_outlined, selectedIcon: Icons.payments, label: 'Plans'),
-        ],
-      ),
+      bottomNavigationBar: showNav
+          ? RoleBottomNav(
+              currentIndex: index,
+              onTap: (i) {
+                const routes = [
+                  '/creator',
+                  '/creator/library',
+                  '/creator/analytics',
+                  '/creator/plans',
+                  '/creator/profile',
+                ];
+                context.go(routes[i]);
+              },
+              items: const [
+                BottomNavItem(icon: Icons.dashboard_outlined, selectedIcon: Icons.dashboard, label: 'Studio'),
+                BottomNavItem(icon: Icons.video_library_outlined, selectedIcon: Icons.video_library, label: 'Library'),
+                BottomNavItem(icon: Icons.insights_outlined, selectedIcon: Icons.insights, label: 'Analytics'),
+                BottomNavItem(icon: Icons.payments_outlined, selectedIcon: Icons.payments, label: 'Plans'),
+                BottomNavItem(icon: Icons.person_outline, selectedIcon: Icons.person, label: 'Account'),
+              ],
+            )
+          : null,
     );
   }
 }
@@ -39,7 +54,19 @@ class CreatorStudioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Creator Studio')),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: SuperstarAppBar(
+        title: 'Creator Studio',
+        showBack: false,
+        actions: [
+          IconButton(
+            tooltip: 'Account',
+            icon: const Icon(Icons.person_outline, color: AppColors.secondary),
+            onPressed: () => context.go('/creator/profile'),
+          ),
+          const LogoutIconButton(),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

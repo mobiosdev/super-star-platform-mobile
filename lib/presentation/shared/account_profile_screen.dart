@@ -4,11 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/light_blue_theme.dart';
-import '../../core/network/api_exception.dart';
+import '../../core/widgets/logout_button.dart';
 import '../../core/widgets/superstar_app_bar.dart';
 import '../../domain/entities/user.dart';
 import '../providers/auth_provider.dart';
-import '../providers/feed_provider.dart';
 
 /// Account screen with sign-out (calls `POST /auth/logout`).
 class AccountProfileScreen extends ConsumerStatefulWidget {
@@ -21,41 +20,6 @@ class AccountProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
-  bool _isLoggingOut = false;
-
-  Future<void> _confirmAndLogout() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Sign out?'),
-        content: const Text('You will need to sign in again to access your account.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Sign out', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted) return;
-
-    setState(() => _isLoggingOut = true);
-    try {
-      await ref.read(authStateProvider.notifier).logout();
-      ref.invalidate(feedProvider);
-      if (mounted) context.go('/login');
-    } on ApiException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoggingOut = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authStateProvider);
@@ -135,31 +99,7 @@ class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
           ),
         ),
         const SizedBox(height: 32),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: _isLoggingOut ? null : _confirmAndLogout,
-            icon: _isLoggingOut
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.error),
-                  )
-                : const Icon(Icons.logout_rounded, color: AppColors.error),
-            label: Text(
-              _isLoggingOut ? 'Signing out…' : 'Sign out',
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-                color: AppColors.error,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              side: const BorderSide(color: AppColors.error),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-        ),
+        const LogoutOutlinedButton(),
       ],
     );
   }

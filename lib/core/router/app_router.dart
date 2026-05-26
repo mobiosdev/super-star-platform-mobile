@@ -6,7 +6,9 @@ import '../../presentation/admin/admin_shell.dart';
 import '../../presentation/admin/content_review_screen.dart';
 import '../../presentation/auth/auth_loading_screen.dart';
 import '../../presentation/auth/login_screen.dart';
+import '../../presentation/creator/creator_profile_screen.dart';
 import '../../presentation/creator/creator_shell.dart';
+import '../../presentation/superadmin/superadmin_superstars_screen.dart';
 import '../../presentation/customer/customer_shell.dart';
 import '../../presentation/shared/account_profile_screen.dart';
 import '../../presentation/shared/placeholder_screen.dart';
@@ -102,6 +104,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             ),
           ),
           GoRoute(
+            path: '/creator/profile',
+            builder: (_, __) => const CreatorProfileScreen(),
+          ),
+          GoRoute(
             path: '/creator/upload',
             builder: (_, __) => const PlaceholderScreen(title: 'Upload Content'),
           ),
@@ -134,10 +140,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/superadmin', builder: (_, __) => const SuperadminDashboardScreen()),
           GoRoute(
             path: '/superadmin/superstars',
-            builder: (_, __) => const PlaceholderScreen(
-              title: 'Superstar Management',
-              showBack: false,
-            ),
+            builder: (_, __) => const SuperadminSuperstarsScreen(),
           ),
           GoRoute(
             path: '/superadmin/analytics',
