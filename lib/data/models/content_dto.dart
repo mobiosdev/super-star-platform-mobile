@@ -132,6 +132,7 @@ class ContentDto {
     final upper = type?.toUpperCase() ?? '';
     if (upper.contains('VIDEO')) return 'video';
     if (upper.contains('AUDIO')) return 'audio';
+    if (upper == 'PHOTO' || upper == 'POST' || upper == 'STORY') return 'image';
     return 'image';
   }
 }

@@ -180,9 +180,17 @@ class DioClient {
 
     if (body is Map) {
       if (body['message'] != null) {
-        message = body['message'].toString();
-      } else if (body['error'] is Map && body['error']['message'] != null) {
-        message = body['error']['message'].toString();
+        message = _formatErrorMessage(body['message']);
+      } else if (body['error'] is Map) {
+        final err = body['error'] as Map;
+        if (err['message'] != null) {
+          message = _formatErrorMessage(err['message']);
+        } else if (err['details'] is List && (err['details'] as List).isNotEmpty) {
+          final first = (err['details'] as List).first;
+          if (first is Map && first['issue'] != null) {
+            message = first['issue'].toString();
+          }
+        }
       } else if (body['errors'] is List && (body['errors'] as List).isNotEmpty) {
         final first = (body['errors'] as List).first;
         if (first is Map && first['message'] != null) {
@@ -192,5 +200,12 @@ class DioClient {
     }
 
     return ApiException(message: message, statusCode: status, originalError: e);
+  }
+
+  String _formatErrorMessage(dynamic value) {
+    if (value is List) {
+      return value.map((e) => e.toString()).join('\n');
+    }
+    return value.toString();
   }
 }

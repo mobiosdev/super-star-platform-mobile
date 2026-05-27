@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../core/constants/api_content_types.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/network/api_exception.dart';
 import '../../core/widgets/gradient_cta_button.dart';
 import '../../core/widgets/superstar_app_bar.dart';
 import '../../data/repositories/content_repository_impl.dart';
@@ -19,7 +21,7 @@ class CreatorUploadScreen extends ConsumerStatefulWidget {
 class _CreatorUploadScreenState extends ConsumerState<CreatorUploadScreen> {
   final _titleController = TextEditingController();
   final _bodyController = TextEditingController();
-  String _contentType = 'IMAGE';
+  String _contentType = ApiContentTypes.photo;
   String _tier = 'SILVER';
   String? _imagePath;
   bool _loading = false;
@@ -64,7 +66,7 @@ class _CreatorUploadScreenState extends ConsumerState<CreatorUploadScreen> {
               contentId: content.id,
               filePath: _imagePath!,
               fileName: 'upload.jpg',
-              mediaType: _contentType.contains('VIDEO') ? 'VIDEO' : 'IMAGE',
+              mediaType: ApiContentTypes.mediaUploadType(_contentType),
             );
       }
 
@@ -73,6 +75,10 @@ class _CreatorUploadScreenState extends ConsumerState<CreatorUploadScreen> {
           const SnackBar(content: Text('Content submitted for review')),
         );
         context.go('/creator/library');
+      }
+    } on ApiException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
       }
     } catch (e) {
       if (mounted) {
@@ -105,12 +111,15 @@ class _CreatorUploadScreenState extends ConsumerState<CreatorUploadScreen> {
           DropdownButtonFormField<String>(
             value: _contentType,
             decoration: const InputDecoration(labelText: 'Content type'),
-            items: const [
-              DropdownMenuItem(value: 'IMAGE', child: Text('Image')),
-              DropdownMenuItem(value: 'VIDEO_HD', child: Text('Video HD')),
-              DropdownMenuItem(value: 'AUDIO', child: Text('Audio')),
-            ],
-            onChanged: (v) => setState(() => _contentType = v ?? 'IMAGE'),
+            items: ApiContentTypes.all
+                .map(
+                  (v) => DropdownMenuItem(
+                    value: v,
+                    child: Text(ApiContentTypes.label(v)),
+                  ),
+                )
+                .toList(),
+            onChanged: (v) => setState(() => _contentType = v ?? ApiContentTypes.photo),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
