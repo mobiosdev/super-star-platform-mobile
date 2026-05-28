@@ -43,32 +43,79 @@ class CreatorAnalyticsScreen extends ConsumerWidget {
           }
           return ListView(
             padding: const EdgeInsets.all(16),
-            children: data.entries.map((e) {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
-                decoration: LightBlueTheme.cardDecoration(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      e.key,
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      '${e.value}',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+            children: data.entries.map((e) => _AnalyticsCard(entry: e)).toList(),
           );
         },
       ),
     );
+  }
+}
+
+class _AnalyticsCard extends StatelessWidget {
+  const _AnalyticsCard({required this.entry});
+
+  final MapEntry<String, dynamic> entry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: LightBlueTheme.cardDecoration(),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              _humanizeKey(entry.key),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: 3,
+            child: Text(
+              _formatValue(entry.value),
+              textAlign: TextAlign.right,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                color: AppColors.secondary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _humanizeKey(String key) {
+    return key
+        .replaceAll('_', ' ')
+        .split(' ')
+        .where((s) => s.isNotEmpty)
+        .map((s) => s[0].toUpperCase() + s.substring(1))
+        .join(' ');
+  }
+
+  String _formatValue(dynamic value) {
+    if (value == null) return '-';
+    if (value is Map) {
+      return value.entries.map((e) => '${_humanizeKey(e.key.toString())}: ${e.value}').join('\n');
+    }
+    if (value is List) {
+      if (value.isEmpty) return '-';
+      final first = value.first;
+      if (first is Map) {
+        return first.entries
+            .map((e) => '${_humanizeKey(e.key.toString())}: ${e.value}')
+            .join('\n');
+      }
+      return value.join(', ');
+    }
+    return value.toString();
   }
 }
