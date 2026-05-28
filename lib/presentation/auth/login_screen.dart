@@ -48,10 +48,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
+    
     await ref.read(authStateProvider.notifier).login(
           _emailController.text.trim(),
           _passwordController.text,
         );
+    
+    // Check if widget is still mounted before accessing ref
+    if (!mounted) return;
+    
     final user = ref.read(authStateProvider).valueOrNull;
     if (user != null && mounted) {
       context.go(user.role.homeRoute);

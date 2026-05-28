@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:developer';
 import '../../core/constants/app_colors.dart';
+import '../../core/network/api_exception.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/loading_shimmer.dart';
 import '../../core/widgets/superstar_app_bar.dart';
@@ -10,6 +12,27 @@ import '../../data/models/content_dto.dart';
 import '../../data/repositories/content_repository_impl.dart';
 import '../../data/repositories/superstar_repository_impl.dart';
 import '../../presentation/providers/auth_provider.dart';
+
+String _getFriendlyErrorMessage(Object? error) {
+  log('📍 Content loading error: $error', name: 'CreatorLibrary');
+  
+  if (error is ApiException) {
+    if (error.statusCode == 403) {
+      return 'You do not have permission to access this content library. Please contact support if you believe this is an error.';
+    }
+    return error.message;
+  }
+  
+  final errorStr = error?.toString() ?? 'Unknown error';
+  if (errorStr.contains('403')) {
+    return 'Permission denied. This account may not have content upload privileges enabled.';
+  }
+  if (errorStr.contains('401')) {
+    return 'Your session has expired. Please log in again.';
+  }
+  
+  return errorStr;
+}
 
 final _libraryProvider = FutureProvider.autoDispose<List<ContentDto>>((ref) async {
   final user = ref.watch(authStateProvider).valueOrNull;
@@ -46,13 +69,16 @@ class CreatorLibraryScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const LoadingShimmer(itemCount: 4),
-        error: (e, _) => EmptyState(
-          title: 'Could not load library',
-          subtitle: '$e',
-          icon: Icons.error_outline,
-          action: () => ref.invalidate(_libraryProvider),
-          actionLabel: 'Retry',
-        ),
+        error: (error, stackTrace) {
+          log('❌ Library provider error: $error\n$stackTrace', name: 'CreatorLibrary');
+          return EmptyState(
+            title: 'Could not load library',
+            subtitle: _getFriendlyErrorMessage(error),
+            icon: Icons.error_outline,
+            action: () => ref.invalidate(_libraryProvider),
+            actionLabel: 'Retry',
+          );
+        },
         data: (items) {
           if (items.isEmpty) {
             return EmptyState(
