@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/api_constants.dart';
 import '../../domain/entities/moderation_item.dart';
@@ -23,7 +24,10 @@ class ModerationRepositoryImpl implements ModerationRepository {
     String? search,
     SubscriptionTier? tierFilter,
   }) async {
+    log('📥 fetchQueue called - useMockApi=${ApiConstants.useMockApi}', name: 'ModerationRepo');
+    
     if (ApiConstants.useMockApi) {
+      log('🎭 Using mock API', name: 'ModerationRepo');
       return _MockModerationStore.instance.fetchQueue(
         page: page,
         limit: limit,
@@ -32,8 +36,12 @@ class ModerationRepositoryImpl implements ModerationRepository {
       );
     }
 
+    log('🌐 Using real API', name: 'ModerationRepo');
     final items = await _api.getModerationQueue(page: page, limit: limit);
+    log('📦 API returned ${items.length} items', name: 'ModerationRepo');
+    
     var mapped = items.map((dto) => dto.toEntity()).toList();
+    log('✅ Mapped to ${mapped.length} entities', name: 'ModerationRepo');
 
     if (search != null && search.isNotEmpty) {
       final q = search.toLowerCase();

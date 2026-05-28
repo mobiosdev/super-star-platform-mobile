@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../domain/entities/moderation_item.dart';
 import '../../domain/entities/subscription_tier.dart';
 
@@ -27,6 +29,8 @@ class ModerationDto {
   final String? description;
 
   factory ModerationDto.fromJson(Map<String, dynamic> json) {
+    log('🔍 ModerationDto.fromJson received: $json', name: 'ModerationDTO');
+    
     final content = json['content'];
     Map<String, dynamic>? contentMap;
     if (content is Map) {
@@ -39,7 +43,7 @@ class ModerationDto {
       superstarMap = Map<String, dynamic>.from(superstar);
     }
 
-    return ModerationDto(
+    final dto = ModerationDto(
       id: (json['id'] ?? json['content_id'] ?? contentMap?['id'] ?? '').toString(),
       superstarId: (json['superstar_id'] ?? superstarMap?['id'] ?? '').toString(),
       superstarName: superstarMap?['display_name'] as String? ??
@@ -54,10 +58,14 @@ class ModerationDto {
       status: (json['status'] ?? contentMap?['status'])?.toString(),
       description: contentMap?['body'] as String? ?? json['description'] as String?,
     );
+    
+    log('✅ ModerationDto created: id=${dto.id}, title=${dto.title}, superstar=${dto.superstarName}', name: 'ModerationDTO');
+    
+    return dto;
   }
 
   ModerationItem toEntity() {
-    return ModerationItem(
+    final entity = ModerationItem(
       id: id,
       superstarName: superstarName ?? 'Unknown',
       superstarId: superstarId,
@@ -69,6 +77,10 @@ class ModerationDto {
       mediaUrl: mediaUrl,
       description: description,
     );
+    
+    log('📦 ModerationItem entity: id=${entity.id}, title=${entity.title}, desc=${entity.description}', name: 'ModerationDTO');
+    
+    return entity;
   }
 
   static DateTime? _parseDate(dynamic value) {

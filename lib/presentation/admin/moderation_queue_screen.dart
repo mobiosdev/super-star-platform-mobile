@@ -272,91 +272,133 @@ class _QueueCard extends StatelessWidget {
     final modItem = item;
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+      child: Card(
         margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(16),
-          border: Border(
-            left: BorderSide(color: AppColors.primary, width: 4),
-            top: const BorderSide(color: AppColors.border),
-            right: const BorderSide(color: AppColors.border),
-            bottom: const BorderSide(color: AppColors.border),
+        elevation: 2,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: AppColors.background,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withOpacity(0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (bulkMode)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8, top: 24),
-                  child: Checkbox(
-                    value: selected,
-                    onChanged: (_) => onSelectToggle(),
-                    activeColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              // Accent bar
+              Container(
+                height: 3,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
                   ),
                 ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CachedNetworkImage(
-                  imageUrl: modItem.thumbnailUrl,
-                  width: 88,
-                  height: 66,
-                  fit: BoxFit.cover,
-                ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            modItem.superstarName,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
+                        if (bulkMode)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8, top: 0),
+                            child: Checkbox(
+                              value: selected,
+                              onChanged: (_) => onSelectToggle(),
+                              activeColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                             ),
                           ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: modItem.thumbnailUrl,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        SlaTimerBadge(duration: modItem.queueDuration),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      modItem.title,
-                      style: GoogleFonts.poppins(fontSize: 13, color: AppColors.textSecondary),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        TierBadge(tier: modItem.tier, compact: true),
-                        const SizedBox(width: 8),
-                        Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      modItem.superstarName,
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                  SlaTimerBadge(duration: modItem.queueDuration),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                modItem.title,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  TierBadge(tier: modItem.tier, compact: true),
+                                  const SizedBox(width: 6),
+                                  Icon(Icons.access_time, size: 12, color: AppColors.textSecondary),
+                                  const SizedBox(width: 3),
+                                  Expanded(
+                                    child: Text(
+                                      DateFormat.MMMd().add_jm().format(modItem.submittedAt),
+                                      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.textSecondary),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(width: 4),
-                        Text(
-                          DateFormat.MMMd().add_jm().format(modItem.submittedAt),
-                          style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textSecondary),
-                        ),
-                        const Spacer(),
-                        Icon(Icons.chevron_right, color: AppColors.primary),
+                        Icon(Icons.chevron_right, color: AppColors.primary, size: 20),
                       ],
                     ),
+                    // Description preview
+                    if (modItem.description != null && modItem.description!.isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          modItem.description!,
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                            height: 1.3,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
