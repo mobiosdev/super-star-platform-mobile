@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/widgets/role_bottom_nav.dart';
 import 'moderation_queue_screen.dart';
-class AdminShell extends StatelessWidget {
+import '../providers/auth_provider.dart';
+
+class AdminShell extends ConsumerWidget {
   const AdminShell({super.key, required this.child});
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.toString();
     final index = location.contains('/admin/reports') ? 1 : 0;
     final showNav = !location.contains('/admin/review');
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () async {
+              await ref.read(authStateProvider.notifier).logout();
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
+          ),
+        ],
+      ),
       body: child,
       bottomNavigationBar: showNav
           ? RoleBottomNav(

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/widgets/role_bottom_nav.dart';
 import '../shared/placeholder_screen.dart';
+import '../providers/auth_provider.dart';
 
-class SuperadminShell extends StatelessWidget {
+class SuperadminShell extends ConsumerWidget {
   const SuperadminShell({super.key, required this.child});
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.toString();
     int index = 0;
     if (location.contains('/superadmin/superstars')) index = 1;
@@ -16,6 +18,21 @@ class SuperadminShell extends StatelessWidget {
     if (location.contains('/superadmin/settings')) index = 3;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Super Admin Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () async {
+              await ref.read(authStateProvider.notifier).logout();
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
+          ),
+        ],
+      ),
       body: child,
       bottomNavigationBar: RoleBottomNav(
         currentIndex: index,
