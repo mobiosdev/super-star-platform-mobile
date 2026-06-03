@@ -4,6 +4,8 @@ import '../../core/constants/api_constants.dart';
 import '../../core/network/api_response.dart';
 import '../../core/network/dio_client.dart';
 import '../models/content_dto.dart';
+import '../models/creator_studio_dto.dart';
+import '../models/fan_dto.dart';
 import '../models/moderation_dto.dart';
 import '../models/superstar_dto.dart';
 import '../models/user_dto.dart';
@@ -384,6 +386,61 @@ class PlatformApi {
   Future<Map<String, dynamic>> getPlatformAnalytics() async {
     final response = await _client.get(ApiConstants.analyticsPlatform);
     return ApiResponse.asMap(ApiResponse.unwrap(response.data));
+  }
+
+  // ——— Creator studio ———
+
+  Future<CreatorStudioDashboardDto> getCreatorStudioDashboard({int periodDays = 30}) async {
+    final response = await _client.get(
+      ApiConstants.creatorStudioDashboard,
+      query: {'period_days': periodDays},
+    );
+    return CreatorStudioDashboardDto.fromJson(
+      ApiResponse.asMap(ApiResponse.unwrap(response.data)),
+    );
+  }
+
+  Future<GoLiveResultDto> startGoLive({
+    String? title,
+    String? streamUrl,
+    String? message,
+  }) async {
+    final body = <String, dynamic>{};
+    if (title != null && title.isNotEmpty) body['title'] = title;
+    if (streamUrl != null && streamUrl.isNotEmpty) body['stream_url'] = streamUrl;
+    if (message != null && message.isNotEmpty) body['message'] = message;
+
+    final response = await _client.post(
+      ApiConstants.creatorStudioGoLive,
+      data: body.isEmpty ? null : body,
+    );
+    return GoLiveResultDto.fromJson(ApiResponse.asMap(ApiResponse.unwrap(response.data)));
+  }
+
+  Future<void> endGoLive() async {
+    await _client.post(ApiConstants.creatorStudioGoLiveEnd);
+  }
+
+  // ——— Fans ———
+
+  Future<List<FanNotificationDto>> getFanNotifications({
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final response = await _client.get(
+      ApiConstants.fansNotifications,
+      query: {'page': page, 'limit': limit},
+    );
+    return _parseList(response.data, FanNotificationDto.fromJson);
+  }
+
+  Future<List<FanLiveArtistDto>> getFansLive() async {
+    final response = await _client.get(ApiConstants.fansLive);
+    return _parseList(response.data, FanLiveArtistDto.fromJson);
+  }
+
+  Future<void> markFanNotificationRead(String notificationId) async {
+    await _client.patch(ApiConstants.fanNotificationRead(notificationId));
   }
 
   /// Resolve superstar profile id for the logged-in creator.

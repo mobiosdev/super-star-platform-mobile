@@ -10,6 +10,7 @@ import '../../core/widgets/loading_shimmer.dart';
 import '../../core/widgets/superstar_app_bar.dart';
 import '../../core/widgets/upgrade_prompt_modal.dart';
 import '../providers/feed_provider.dart';
+import 'fan_live_section.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeFeedScreen extends ConsumerStatefulWidget {
@@ -98,6 +99,7 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
+          const SliverToBoxAdapter(child: FanLiveNowSection()),
           SliverToBoxAdapter(child: _FeedHeader()),
           SliverPadding(
             padding: Responsive.pagePadding(context),

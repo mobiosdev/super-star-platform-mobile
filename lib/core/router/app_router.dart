@@ -17,7 +17,9 @@ import '../../presentation/customer/subscriptions_screen.dart';
 import '../../presentation/customer/superstar_profile_screen.dart';
 import '../../presentation/creator/creator_analytics_screen.dart';
 import '../../presentation/creator/creator_library_screen.dart';
+import '../../presentation/creator/creator_go_live_screen.dart';
 import '../../presentation/creator/creator_upload_screen.dart';
+import '../../presentation/customer/notifications_screen.dart';
 import '../../presentation/shared/account_profile_screen.dart';
 import '../../presentation/shared/placeholder_screen.dart';
 import '../../presentation/superadmin/superadmin_shell.dart';
@@ -55,10 +57,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/customer/notifications',
-            builder: (_, __) => const PlaceholderScreen(
-              title: 'Notifications',
-              icon: Icons.notifications_outlined,
-            ),
+            builder: (_, __) => const NotificationsScreen(),
           ),
         ],
       ),
@@ -81,10 +80,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (_, __) => const CreatorProfileScreen(),
           ),
           GoRoute(path: '/creator/upload', builder: (_, __) => const CreatorUploadScreen()),
-          GoRoute(
-            path: '/creator/live',
-            builder: (_, __) => const PlaceholderScreen(title: 'Live Stream Setup'),
-          ),
+          GoRoute(path: '/creator/live', builder: (_, __) => const CreatorGoLiveScreen()),
         ],
       ),
       ShellRoute(

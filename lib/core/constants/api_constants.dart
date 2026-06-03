@@ -69,6 +69,16 @@ abstract final class ApiConstants {
   static String analyticsContent(String id) => '/analytics/content/$id';
   static const String analyticsPlatform = '/analytics/platform';
 
+  // Creator studio (SUPERSTAR)
+  static const String creatorStudioDashboard = '/creator-studio/dashboard';
+  static const String creatorStudioGoLive = '/creator-studio/go-live';
+  static const String creatorStudioGoLiveEnd = '/creator-studio/go-live/end';
+
+  // Fans (CUSTOMER)
+  static const String fansNotifications = '/fans/notifications';
+  static const String fansLive = '/fans/live';
+  static String fanNotificationRead(String id) => '/fans/notifications/$id/read';
+
   // Webhooks (server-side only)
   static const String webhooksStripe = '/webhooks/stripe';
 }
