@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -63,8 +64,6 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
           },
         ),
         actions: [
-          const _LightedLiveButton(),
-          const SizedBox(width: 8),
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () => context.push('/customer/notifications'),
@@ -96,13 +95,27 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
     }
 
     if (feedState.posts.isEmpty) {
-      return EmptyState(
-        title: 'Your feed is empty',
-        subtitle:
-            'No posts yet. Subscribe to a Superstar in Explore, or ask an admin to add verified creators to the platform.',
-        icon: Icons.rss_feed_rounded,
-        action: () => context.push('/customer/explore'),
-        actionLabel: 'Explore',
+      return RefreshIndicator(
+        color: AppColors.primary,
+        onRefresh: () => ref.read(feedProvider.notifier).refresh(),
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            ..._buildFeedHeaderSlivers(),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: EmptyState(
+                title: 'Your feed is empty',
+                subtitle:
+                    'No posts yet. Subscribe to a Superstar in Explore, or ask an admin to add verified creators to the platform.',
+                icon: Icons.rss_feed_rounded,
+                action: () => context.push('/customer/explore'),
+                actionLabel: 'Explore',
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -113,8 +126,7 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          const SliverToBoxAdapter(child: _BnsBanner()),
-          const SliverToBoxAdapter(child: FanLiveNowSection()),
+          ..._buildFeedHeaderSlivers(),
           SliverPadding(
             padding: Responsive.pagePadding(context),
             sliver: SliverList(
@@ -153,17 +165,25 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
       ),
     );
   }
+
+  List<Widget> _buildFeedHeaderSlivers() {
+    return const [
+      SliverToBoxAdapter(child: _FeedBannerCarousel()),
+      SliverToBoxAdapter(child: _FeedLiveButton()),
+      SliverToBoxAdapter(child: FanLiveNowSection()),
+    ];
+  }
 }
 
 
-class _LightedLiveButton extends StatefulWidget {
-  const _LightedLiveButton();
+class _FeedLiveButton extends StatefulWidget {
+  const _FeedLiveButton();
 
   @override
-  State<_LightedLiveButton> createState() => _LightedLiveButtonState();
+  State<_FeedLiveButton> createState() => _FeedLiveButtonState();
 }
 
-class _LightedLiveButtonState extends State<_LightedLiveButton> with SingleTickerProviderStateMixin {
+class _FeedLiveButtonState extends State<_FeedLiveButton> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -183,51 +203,73 @@ class _LightedLiveButtonState extends State<_LightedLiveButton> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => GoRouter.of(context).push('/live-stream'),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
       child: AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          final glow = _animationController.value;
+          return DecoratedBox(
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1 + _animationController.value * 0.15),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.error.withOpacity(0.08 + glow * 0.08),
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: Colors.red.withOpacity(0.5 + _animationController.value * 0.5),
-                width: 1.5,
+                color: AppColors.error.withOpacity(0.28 + glow * 0.32),
+                width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.red.withOpacity(0.2 * _animationController.value),
-                  blurRadius: 6,
+                  color: AppColors.error.withOpacity(0.12 + glow * 0.16),
+                  blurRadius: 18,
                   spreadRadius: 1,
                 ),
               ],
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.6 + _animationController.value * 0.4),
-                    shape: BoxShape.circle,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => context.push('/live-stream'),
+                borderRadius: BorderRadius.circular(14),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withOpacity(0.7 + glow * 0.3),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.error.withOpacity(glow * 0.6),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        'WATCH LIVE',
+                        style: GoogleFonts.poppins(
+                          color: AppColors.error,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Icon(
+                        Icons.play_circle_fill_rounded,
+                        color: AppColors.error,
+                        size: 22,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 6),
-                Text(
-                  'LIVE',
-                  style: GoogleFonts.poppins(
-                    color: Colors.red,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
+              ),
             ),
           );
         },
@@ -236,31 +278,104 @@ class _LightedLiveButtonState extends State<_LightedLiveButton> with SingleTicke
   }
 }
 
-class _BnsBanner extends StatelessWidget {
-  const _BnsBanner();
+class _FeedBannerCarousel extends StatefulWidget {
+  const _FeedBannerCarousel();
+
+  @override
+  State<_FeedBannerCarousel> createState() => _FeedBannerCarouselState();
+}
+
+class _FeedBannerCarouselState extends State<_FeedBannerCarousel> {
+  static const _banners = [
+    'assets/images/feed/bns_banner.jpg',
+    'assets/images/feed/bns_banner1.jpg',
+    'assets/images/feed/bns_banner2.jpg',
+  ];
+
+  final PageController _pageController = PageController();
+  Timer? _timer;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!_pageController.hasClients) return;
+      final nextPage = (_currentIndex + 1) % _banners.length;
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: AspectRatio(
+        aspectRatio: 16 / 7,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() => _currentIndex = index);
+                  },
+                  itemCount: _banners.length,
+                  itemBuilder: (context, index) {
+                    return Image.asset(
+                      _banners[index],
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    );
+                  },
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 10,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(_banners.length, (index) {
+                      final selected = index == _currentIndex;
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: selected ? 18 : 7,
+                        height: 7,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(selected ? 0.95 : 0.55),
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Image.asset(
-            'assets/images/feed/bns_banner.jpg',
-            fit: BoxFit.cover,
-            height: 130,
-            width: double.infinity,
           ),
         ),
       ),

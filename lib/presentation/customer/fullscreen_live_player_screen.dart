@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/widgets/app_video_player.dart';
 
 class FullscreenLivePlayerScreen extends StatefulWidget {
   const FullscreenLivePlayerScreen({super.key});
@@ -47,7 +46,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
   }
 
   Future<void> _initVideo() async {
-    _videoController = VideoPlayerController.asset('assets/videos/my_clip.mp4');
+    _videoController = VideoPlayerController.asset('assets/videos/my_clip2.mp4');
     try {
       await _videoController.initialize();
       await _videoController.setLooping(true);
@@ -170,9 +169,11 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
           // Video background
           Positioned.fill(
             child: _videoInitialized
-                ? Center(
-                    child: AspectRatio(
-                      aspectRatio: _videoController.value.aspectRatio,
+                ? FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: _videoController.value.size.width,
+                      height: _videoController.value.size.height,
                       child: VideoPlayer(_videoController),
                     ),
                   )
