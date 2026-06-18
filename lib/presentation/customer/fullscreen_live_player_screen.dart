@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/light_blue_theme.dart';
 
 class FullscreenLivePlayerScreen extends StatefulWidget {
   const FullscreenLivePlayerScreen({super.key});
@@ -324,15 +325,19 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
             // Lower UI: Comments & Inputs
             Align(
               alignment: Alignment.bottomCenter,
-              child: SafeArea(
-                top: false,
-                minimum: const EdgeInsets.only(bottom: 12),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: SafeArea(
+                  top: false,
+                  minimum: const EdgeInsets.only(bottom: 12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                       // Scrolling Chat List
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.28,
@@ -355,27 +360,41 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                               final isUser = msg['username'] == 'You';
                               return Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${msg['username']}: ',
-                                      style: GoogleFonts.poppins(
-                                        color: isUser ? Colors.amberAccent : Colors.cyanAccent,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.35),
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.08),
+                                        width: 0.8,
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Text(
-                                        msg['message'] ?? '',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                        ),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: '${msg['username']}  ',
+                                            style: GoogleFonts.poppins(
+                                              color: isUser ? Colors.amberAccent : Colors.cyanAccent,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 12.5,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: msg['message'] ?? '',
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.white,
+                                              fontSize: 12.5,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               );
                             },
@@ -390,32 +409,88 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                           // Chat Input Field
                           Expanded(
                             child: Container(
+                              height: 48,
                               decoration: BoxDecoration(
-                                color: Colors.black54,
+                                color: Colors.white.withOpacity(0.12),
                                 borderRadius: BorderRadius.circular(24),
-                                border: Border.all(color: Colors.white30, width: 0.5),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.25),
+                                  width: 1.0,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
                               child: Row(
                                 children: [
                                   const SizedBox(width: 12),
+                                  Icon(
+                                    Icons.sentiment_satisfied_alt_rounded,
+                                    color: Colors.white.withOpacity(0.65),
+                                    size: 22,
+                                  ),
+                                  const SizedBox(width: 8),
                                   Expanded(
                                     child: TextField(
                                       controller: _chatController,
                                       textInputAction: TextInputAction.send,
                                       onSubmitted: (_) => _sendUserComment(),
-                                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
-                                      decoration: const InputDecoration(
-                                        hintText: 'Comment...',
-                                        hintStyle: TextStyle(color: Colors.white54, fontSize: 13),
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      decoration: InputDecoration(
+                                        hintText: 'Say something...',
+                                        hintStyle: GoogleFonts.poppins(
+                                          color: Colors.white.withOpacity(0.55),
+                                          fontSize: 13,
+                                        ),
                                         border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        filled: false,
+                                        fillColor: Colors.transparent,
                                         isDense: true,
-                                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(Icons.send, color: AppColors.primary, size: 20),
-                                    onPressed: _sendUserComment,
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LightBlueTheme.primaryGradient,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.primary.withOpacity(0.4),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          customBorder: const CircleBorder(),
+                                          onTap: _sendUserComment,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.arrow_upward_rounded,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -423,18 +498,38 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                           ),
                           const SizedBox(width: 12),
 
-                          // Heart Button for Floating Hearts effect
-                          GestureDetector(
-                            onTap: () {
-                              _spawnHeart();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.redAccent,
+                          // Heart Button (Vibrant & Glowing)
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFFF4B91), Color(0xFFFF0060)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              child: const Icon(Icons.favorite, color: Colors.white, size: 22),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFFFF0060).withOpacity(0.4),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                customBorder: const CircleBorder(),
+                                onTap: _spawnHeart,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -444,6 +539,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                 ),
               ),
             ),
+          ),
           ],
         ),
       ),

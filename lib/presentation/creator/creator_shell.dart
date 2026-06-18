@@ -67,6 +67,7 @@ class CreatorShell extends StatelessWidget {
 
     return Scaffold(
       body: child,
+      extendBody: true,
       bottomNavigationBar: showNav
           ? RoleBottomNav(
               currentIndex: index,

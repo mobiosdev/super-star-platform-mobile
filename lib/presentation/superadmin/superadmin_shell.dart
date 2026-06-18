@@ -34,6 +34,7 @@ class SuperadminShell extends ConsumerWidget {
         ],
       ),
       body: child,
+      extendBody: true,
       bottomNavigationBar: RoleBottomNav(
         currentIndex: index,
         onTap: (i) {

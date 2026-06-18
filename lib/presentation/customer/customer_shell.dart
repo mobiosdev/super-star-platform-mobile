@@ -28,6 +28,7 @@ class _CustomerShellState extends State<CustomerShell> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: widget.child,
+      extendBody: true,
       bottomNavigationBar: showNav
           ? RoleBottomNav(
               currentIndex: index,

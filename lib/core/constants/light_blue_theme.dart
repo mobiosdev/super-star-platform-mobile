@@ -83,7 +83,7 @@ abstract final class LightBlueTheme {
           textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.background,
         elevation: 0,
         shape: RoundedRectangleBorder(

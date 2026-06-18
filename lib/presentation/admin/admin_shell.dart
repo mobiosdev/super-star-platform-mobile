@@ -32,6 +32,7 @@ class AdminShell extends ConsumerWidget {
         ],
       ),
       body: child,
+      extendBody: true,
       bottomNavigationBar: showNav
           ? RoleBottomNav(
               currentIndex: index,

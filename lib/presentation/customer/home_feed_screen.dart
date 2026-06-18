@@ -128,7 +128,10 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
         slivers: [
           ..._buildFeedHeaderSlivers(),
           SliverPadding(
-            padding: Responsive.pagePadding(context),
+            padding: EdgeInsets.symmetric(
+              horizontal: Responsive.isTablet(context) ? 32.0 : 0.0,
+              vertical: 12,
+            ),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
