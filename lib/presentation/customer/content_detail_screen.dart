@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/demo/hardcoded_feed_videos.dart';
 import '../../core/widgets/app_video_player.dart';
@@ -80,12 +82,49 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    if (isVideo)
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: item.superstarAvatarUrl != null
+                              ? (item.superstarAvatarUrl!.startsWith('assets/')
+                                  ? AssetImage(item.superstarAvatarUrl!) as ImageProvider
+                                  : CachedNetworkImageProvider(item.superstarAvatarUrl!))
+                              : null,
+                          child: item.superstarAvatarUrl == null ? const Icon(Icons.person) : null,
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.superstarName ?? 'Superstar',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            if (item.createdAt != null)
+                              Text(
+                                DateFormat.MMMd().add_jm().format(item.createdAt!),
+                                style: GoogleFonts.poppins(
+                                  fontSize: 11,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (isVideo) ...[
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: AppVideoPlayer(source: videoUrl, autoPlay: true),
-                      )
-                    else if (imageUrl != null)
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                    if (imageUrl != null) ...[
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: SizedBox(
@@ -94,7 +133,8 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                           child: FeedThumbnail(url: imageUrl, fit: BoxFit.cover),
                         ),
                       ),
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
+                    ],
                     Row(
                       children: [
                         Expanded(

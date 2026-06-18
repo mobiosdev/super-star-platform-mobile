@@ -61,7 +61,7 @@ class FanLiveNowSection extends ConsumerWidget {
                   final a = artists[i];
                   return _LiveChip(
                     artist: a,
-                    onTap: () => context.push('/superstar/${a.superstarId}'),
+                    onTap: () => context.push('/live-stream'),
                   );
                 },
               ),

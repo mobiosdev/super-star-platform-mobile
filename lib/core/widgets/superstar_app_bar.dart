@@ -9,12 +9,14 @@ class SuperstarAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.showBack = true,
     this.onBack,
+    this.leading,
   });
 
   final String title;
   final List<Widget>? actions;
   final bool showBack;
   final VoidCallback? onBack;
+  final Widget? leading;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -22,13 +24,14 @@ class SuperstarAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: showBack
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-              color: AppColors.secondary,
-              onPressed: onBack ?? () => Navigator.maybePop(context),
-            )
-          : null,
+      leading: leading ??
+          (showBack
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                  color: AppColors.secondary,
+                  onPressed: onBack ?? () => Navigator.maybePop(context),
+                )
+              : null),
       title: Text(
         title,
         style: GoogleFonts.poppins(

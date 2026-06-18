@@ -23,6 +23,7 @@ import '../../presentation/customer/notifications_screen.dart';
 import '../../presentation/shared/account_profile_screen.dart';
 import '../../presentation/shared/placeholder_screen.dart';
 import '../../presentation/superadmin/superadmin_shell.dart';
+import '../../presentation/customer/fullscreen_live_player_screen.dart';
 import 'route_guards.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -40,6 +41,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/superstar/:id',
         builder: (_, state) => SuperstarProfileScreen(superstarId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/live-stream',
+        builder: (_, __) => const FullscreenLivePlayerScreen(),
       ),
       ShellRoute(
         builder: (_, __, child) => CustomerShell(child: child),
