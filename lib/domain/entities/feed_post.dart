@@ -9,6 +9,7 @@ class FeedPost extends Equatable {
     required this.superstarAvatarUrl,
     required this.caption,
     required this.thumbnailUrl,
+    this.mediaUrl,
     required this.mediaType,
     required this.requiredTier,
     required this.userTier,
@@ -24,6 +25,8 @@ class FeedPost extends Equatable {
   final String superstarAvatarUrl;
   final String caption;
   final String thumbnailUrl;
+  /// Video/audio URL or bundled asset path (e.g. `assets/videos/clip.mp4`).
+  final String? mediaUrl;
   final String mediaType;
   final SubscriptionTier requiredTier;
   final SubscriptionTier userTier;

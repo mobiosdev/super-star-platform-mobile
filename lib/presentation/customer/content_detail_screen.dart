@@ -1,9 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/demo/hardcoded_feed_videos.dart';
+import '../../core/widgets/app_video_player.dart';
 import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/feed_thumbnail.dart';
 import '../../core/widgets/superstar_app_bar.dart';
 import '../../core/widgets/tier_badge.dart';
 import '../../data/api/platform_api.dart';
@@ -39,11 +41,13 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
   }
 
   Future<void> _like() async {
+    if (HardcodedFeedVideos.isHardcodedId(widget.contentId)) return;
     await ref.read(platformApiProvider).toggleLike(widget.contentId);
     ref.invalidate(_contentProvider(widget.contentId));
   }
 
   Future<void> _postComment() async {
+    if (HardcodedFeedVideos.isHardcodedId(widget.contentId)) return;
     final text = _commentController.text.trim();
     if (text.isEmpty) return;
     await ref.read(platformApiProvider).addComment(widget.contentId, body: text);
@@ -54,7 +58,10 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final content = ref.watch(_contentProvider(widget.contentId));
-    final comments = ref.watch(_commentsProvider(widget.contentId));
+    final isDemo = HardcodedFeedVideos.isHardcodedId(widget.contentId);
+    final comments = isDemo
+        ? const AsyncValue<List<CommentDto>>.data([])
+        : ref.watch(_commentsProvider(widget.contentId));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -64,21 +71,27 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
         error: (e, _) => EmptyState(title: 'Error', subtitle: '$e', icon: Icons.error_outline),
         data: (item) {
           final tier = _tierFromApi(item.tierRequired);
-          final imageUrl = item.mediaUrl ?? item.thumbnailUrl;
+          final videoUrl = _videoSource(item);
+          final imageUrl = item.thumbnailUrl;
+          final isVideo = videoUrl != null;
           return Column(
             children: [
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    if (imageUrl != null)
+                    if (isVideo)
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: CachedNetworkImage(
-                          imageUrl: imageUrl,
+                        child: AppVideoPlayer(source: videoUrl, autoPlay: true),
+                      )
+                    else if (imageUrl != null)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
                           height: 220,
                           width: double.infinity,
-                          fit: BoxFit.cover,
+                          child: FeedThumbnail(url: imageUrl, fit: BoxFit.cover),
                         ),
                       ),
                     const SizedBox(height: 12),
@@ -146,23 +159,31 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _commentController,
-                          decoration: const InputDecoration(
-                            hintText: 'Add a comment…',
-                            border: OutlineInputBorder(),
+                  child: isDemo
+                      ? Text(
+                          'Demo video — likes and comments are not synced to the server.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
                           ),
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _commentController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Add a comment…',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: _postComment,
+                              icon: const Icon(Icons.send, color: AppColors.primary),
+                            ),
+                          ],
                         ),
-                      ),
-                      IconButton(
-                        onPressed: _postComment,
-                        icon: const Icon(Icons.send, color: AppColors.primary),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],
@@ -181,5 +202,11 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
       default:
         return SubscriptionTier.silver;
     }
+  }
+
+  String? _videoSource(ContentDto item) {
+    final type = item.contentType?.toUpperCase() ?? '';
+    if (!type.contains('VIDEO')) return null;
+    return item.mediaUrl ?? item.thumbnailUrl;
   }
 }

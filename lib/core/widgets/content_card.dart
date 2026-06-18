@@ -6,6 +6,7 @@ import '../../domain/entities/feed_post.dart';
 import '../../domain/entities/subscription_tier.dart';
 import '../constants/app_colors.dart';
 import '../constants/light_blue_theme.dart';
+import 'feed_thumbnail.dart';
 import 'tier_badge.dart';
 
 class ContentCard extends StatelessWidget {
@@ -120,15 +121,7 @@ class _MediaSection extends StatelessWidget {
             borderRadius: const BorderRadius.vertical(bottom: Radius.circular(0)),
             child: AspectRatio(
               aspectRatio: 16 / 10,
-              child: CachedNetworkImage(
-                imageUrl: post.thumbnailUrl,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => Container(color: AppColors.surface),
-                errorWidget: (_, __, ___) => Container(
-                  color: AppColors.surface,
-                  child: const Icon(Icons.broken_image_outlined),
-                ),
-              ),
+              child: FeedThumbnail(url: post.thumbnailUrl, fit: BoxFit.cover),
             ),
           ),
           if (post.needsUpgrade) ...[

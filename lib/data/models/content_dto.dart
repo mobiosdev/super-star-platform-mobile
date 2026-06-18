@@ -96,6 +96,7 @@ class ContentDto {
       superstarAvatarUrl: superstarAvatarUrl ?? 'https://i.pravatar.cc/150?u=$superstarId',
       caption: body ?? title ?? '',
       thumbnailUrl: thumbnailUrl ?? mediaUrl ?? 'https://picsum.photos/seed/$id/400/300',
+      mediaUrl: mediaUrl,
       mediaType: _mediaTypeLabel(contentType),
       requiredTier: required,
       userTier: user,
