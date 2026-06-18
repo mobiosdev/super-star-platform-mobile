@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import '../../core/constants/app_colors.dart';
@@ -40,6 +41,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _initVideo();
     _startMockChat();
     _startViewerCountMock();
@@ -149,6 +151,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
 
   @override
   void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     _chatTimer?.cancel();
     _viewerTimer?.cancel();
     _chatController.dispose();
@@ -163,278 +166,286 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Video background
-          Positioned.fill(
-            child: _videoInitialized
-                ? FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: _videoController.value.size.width,
-                      height: _videoController.value.size.height,
-                      child: VideoPlayer(_videoController),
+      body: SizedBox.expand(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Video background
+            Positioned.fill(
+              child: _videoInitialized
+                  ? FittedBox(
+                      fit: BoxFit.cover,
+                      child: SizedBox(
+                        width: _videoController.value.size.width,
+                        height: _videoController.value.size.height,
+                        child: VideoPlayer(_videoController),
+                      ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
                     ),
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  ),
-          ),
+            ),
 
-          // Dark overlay gradient for readability
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black.withOpacity(0.4),
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.6),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+            // Dark overlay gradient for readability
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.4),
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.6),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Floating Hearts Animation overlay
-          ..._hearts.map((heart) {
-            return AnimatedBuilder(
-              animation: heart.controller,
-              builder: (context, child) {
-                final progress = heart.controller.value;
-                // Path curve calculations
-                final y = (1.0 - progress) * MediaQuery.of(context).size.height * 0.4;
-                final x = heart.startX + math.sin(progress * math.pi * 3) * 20;
-                final scale = 1.0 - (progress * 0.3);
-                final opacity = 1.0 - progress;
+            // Floating Hearts Animation overlay
+            ..._hearts.map((heart) {
+              return AnimatedBuilder(
+                animation: heart.controller,
+                builder: (context, child) {
+                  final progress = heart.controller.value;
+                  // Path curve calculations
+                  final y = (1.0 - progress) * MediaQuery.of(context).size.height * 0.4;
+                  final x = heart.startX + math.sin(progress * math.pi * 3) * 20;
+                  final scale = 1.0 - (progress * 0.3);
+                  final opacity = 1.0 - progress;
 
-                return Positioned(
-                  bottom: 80 + y,
-                  right: x,
-                  child: Opacity(
-                    opacity: opacity,
-                    child: Transform.scale(
-                      scale: scale,
-                      child: Icon(Icons.favorite, color: heart.color, size: 28),
+                  return Positioned(
+                    bottom: 80 + y,
+                    right: x,
+                    child: Opacity(
+                      opacity: opacity,
+                      child: Transform.scale(
+                        scale: scale,
+                        child: Icon(Icons.favorite, color: heart.color, size: 28),
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          }),
+                  );
+                },
+              );
+            }),
 
-          // Upper UI: Live badge, Artist info, Viewer count, Close button
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: [
-                  // Creator Avatar & Name
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white24, width: 0.5),
-                    ),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 14,
-                          backgroundImage: CachedNetworkImageProvider('https://i.pravatar.cc/150?u=demo-artist'),
+            // Upper UI: Live badge, Artist info, Viewer count, Close button
+            Align(
+              alignment: Alignment.topCenter,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      // Creator Avatar & Name
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white24, width: 0.5),
                         ),
-                        const SizedBox(width: 8),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
+                            const CircleAvatar(
+                              radius: 14,
+                              backgroundImage: CachedNetworkImageProvider('https://i.pravatar.cc/150?u=demo-artist'),
+                            ),
+                            const SizedBox(width: 8),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'For the Fans',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  'Live Stream',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white70,
+                                    fontSize: 9,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // LIVE Pulsing Badge
+                      const _LivePulsingBadge(),
+                      const SizedBox(width: 8),
+
+                      // Viewer Count
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.remove_red_eye_outlined, color: Colors.white, size: 14),
+                            const SizedBox(width: 4),
                             Text(
-                              'For the Fans',
+                              '$_viewerCount',
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              'Live Stream',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white70,
-                                fontSize: 9,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-
-                  // LIVE Pulsing Badge
-                  const _LivePulsingBadge(),
-                  const SizedBox(width: 8),
-
-                  // Viewer Count
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.remove_red_eye_outlined, color: Colors.white, size: 14),
-                        const SizedBox(width: 4),
-                        Text(
-                          '$_viewerCount',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-
-                  // Close button
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 28),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Lower UI: Comments & Inputs
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Scrolling Chat List
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.28,
-                      child: ShaderMask(
-                        shaderCallback: (rect) {
-                          return const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black],
-                            stops: [0.0, 0.2],
-                          ).createShader(rect);
-                        },
-                        blendMode: BlendMode.dstIn,
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: _chatMessages.length,
-                          padding: const EdgeInsets.only(top: 24),
-                          itemBuilder: (context, index) {
-                            final msg = _chatMessages[index];
-                            final isUser = msg['username'] == 'You';
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${msg['username']}: ',
-                                    style: GoogleFonts.poppins(
-                                      color: isUser ? Colors.amberAccent : Colors.cyanAccent,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      msg['message'] ?? '',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
+                      const Spacer(),
 
-                    // Inputs Row
-                    Row(
-                      children: [
-                        // Chat Input Field
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(color: Colors.white30, width: 0.5),
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: TextField(
-                                    controller: _chatController,
-                                    textInputAction: TextInputAction.send,
-                                    onSubmitted: (_) => _sendUserComment(),
-                                    style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
-                                    decoration: const InputDecoration(
-                                      hintText: 'Comment...',
-                                      hintStyle: TextStyle(color: Colors.white54, fontSize: 13),
-                                      border: InputBorder.none,
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(vertical: 10),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.send, color: AppColors.primary, size: 20),
-                                  onPressed: _sendUserComment,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-
-                        // Heart Button for Floating Hearts effect
-                        GestureDetector(
-                          onTap: () {
-                            _spawnHeart();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.redAccent,
-                            ),
-                            child: const Icon(Icons.favorite, color: Colors.white, size: 22),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      // Close button
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+
+            // Lower UI: Comments & Inputs
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SafeArea(
+                top: false,
+                minimum: const EdgeInsets.only(bottom: 12),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Scrolling Chat List
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.28,
+                        child: ShaderMask(
+                          shaderCallback: (rect) {
+                            return const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.transparent, Colors.black],
+                              stops: [0.0, 0.2],
+                            ).createShader(rect);
+                          },
+                          blendMode: BlendMode.dstIn,
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: _chatMessages.length,
+                            padding: const EdgeInsets.only(top: 24),
+                            itemBuilder: (context, index) {
+                              final msg = _chatMessages[index];
+                              final isUser = msg['username'] == 'You';
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${msg['username']}: ',
+                                      style: GoogleFonts.poppins(
+                                        color: isUser ? Colors.amberAccent : Colors.cyanAccent,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        msg['message'] ?? '',
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Inputs Row
+                      Row(
+                        children: [
+                          // Chat Input Field
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(color: Colors.white30, width: 0.5),
+                              ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _chatController,
+                                      textInputAction: TextInputAction.send,
+                                      onSubmitted: (_) => _sendUserComment(),
+                                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+                                      decoration: const InputDecoration(
+                                        hintText: 'Comment...',
+                                        hintStyle: TextStyle(color: Colors.white54, fontSize: 13),
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.send, color: AppColors.primary, size: 20),
+                                    onPressed: _sendUserComment,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+
+                          // Heart Button for Floating Hearts effect
+                          GestureDetector(
+                            onTap: () {
+                              _spawnHeart();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.redAccent,
+                              ),
+                              child: const Icon(Icons.favorite, color: Colors.white, size: 22),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

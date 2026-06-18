@@ -74,8 +74,8 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
         data: (item) {
           final tier = _tierFromApi(item.tierRequired);
           final videoUrl = _videoSource(item);
-          final imageUrl = item.thumbnailUrl;
           final isVideo = videoUrl != null;
+          final imageUrl = isVideo ? null : item.thumbnailUrl;
           return Column(
             children: [
               Expanded(
