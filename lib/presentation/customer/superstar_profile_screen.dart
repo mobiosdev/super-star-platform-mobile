@@ -73,8 +73,12 @@ class SuperstarProfileScreen extends ConsumerWidget {
                     delegate: SliverChildBuilderDelegate(
                       (context, i) {
                         final post = items[i].toFeedPost();
+                        final isTablet = MediaQuery.sizeOf(context).width >= 600;
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isTablet ? 16.0 : 0.0,
+                            vertical: isTablet ? 8.0 : 4.0,
+                          ),
                           child: ContentCard(
                             post: post,
                             onTap: () => context.push('/content/${post.id}'),
