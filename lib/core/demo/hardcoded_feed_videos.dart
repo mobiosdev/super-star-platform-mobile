@@ -95,10 +95,10 @@ class HardcodedFeedVideos {
     // Example — swap for your bundled file:
     HardcodedFeedVideo(
       id: '${idPrefix}1',
-      superstarName: 'Your Artist',
-      caption: 'Exclusive backstage clip',
+      superstarName: 'For the Fans',
+      caption: 'To all the fans',
       videoUrl: 'assets/videos/my_clip.mp4',
-      thumbnailUrl: 'assets/images/feed/my_clip.jpg',
+      thumbnailUrl: 'assets/images/feed/my_clip.png',
       likes: 128,
       comments: 12,
     ),
