@@ -207,7 +207,7 @@ class _StudioWarningBanner extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.poppins(fontSize: 13, color: AppColors.textPrimary),
+                style: GoogleFonts.roboto(fontSize: 13, color: AppColors.textPrimary),
               ),
             ),
           ],
@@ -244,12 +244,12 @@ class _LiveNowBanner extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.roboto(color: Colors.white, fontWeight: FontWeight.w600),
                 ),
               ),
               Text(
                 'Manage',
-                style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
+                style: GoogleFonts.roboto(color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ],
           ),

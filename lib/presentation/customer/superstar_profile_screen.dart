@@ -50,7 +50,7 @@ class SuperstarProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: Text(
                     'Posts',
-                    style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -123,12 +123,12 @@ class _Header extends StatelessWidget {
               children: [
                 Text(
                   star.displayName ?? 'Superstar',
-                  style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 if (star.bio != null)
-                  Text(star.bio!, style: GoogleFonts.poppins(color: AppColors.textSecondary)),
+                  Text(star.bio!, style: GoogleFonts.roboto(color: AppColors.textSecondary)),
                 if (star.category != null)
-                  Text(star.category!, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.primary)),
+                  Text(star.category!, style: GoogleFonts.roboto(fontSize: 12, color: AppColors.primary)),
               ],
             ),
           ),

@@ -100,11 +100,11 @@ class CreatorLibraryScreen extends ConsumerWidget {
                 return ListTile(
                   title: Text(
                     item.title ?? 'Untitled',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text(
                     '${item.status ?? '—'} · ${item.contentType ?? ''}',
-                    style: GoogleFonts.poppins(fontSize: 12, color: AppColors.textSecondary),
+                    style: GoogleFonts.roboto(fontSize: 12, color: AppColors.textSecondary),
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_outline, color: AppColors.error),

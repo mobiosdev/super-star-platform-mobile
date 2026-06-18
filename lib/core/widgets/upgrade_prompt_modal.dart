@@ -37,7 +37,7 @@ class UpgradePromptModal extends StatelessWidget {
             ),
             child: Text(
               'Upgrade your membership',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.roboto(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -99,12 +99,12 @@ class _TierRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tier, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-                Text(perks, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.textSecondary)),
+                Text(tier, style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
+                Text(perks, style: GoogleFonts.roboto(fontSize: 12, color: AppColors.textSecondary)),
               ],
             ),
           ),
-          Text(price, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.secondary)),
+          Text(price, style: GoogleFonts.roboto(fontWeight: FontWeight.w600, color: AppColors.secondary)),
         ],
       ),
     );

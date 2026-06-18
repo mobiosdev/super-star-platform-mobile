@@ -17,7 +17,7 @@ class TierBadge extends StatelessWidget {
       decoration: _decoration(),
       child: Text(
         tier.label,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.roboto(
           fontSize: compact ? 10 : 11,
           fontWeight: FontWeight.w600,
           color: _textColor(),

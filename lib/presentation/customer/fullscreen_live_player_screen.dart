@@ -263,7 +263,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                               children: [
                                 Text(
                                   'For the Fans',
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.roboto(
                                     color: Colors.white,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -271,7 +271,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                                 ),
                                 Text(
                                   'Live Stream',
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.roboto(
                                     color: Colors.white70,
                                     fontSize: 9,
                                   ),
@@ -300,7 +300,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                             const SizedBox(width: 4),
                             Text(
                               '$_viewerCount',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.roboto(
                                 color: Colors.white,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
@@ -377,7 +377,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                                         children: [
                                           TextSpan(
                                             text: '${msg['username']}  ',
-                                            style: GoogleFonts.poppins(
+                                            style: GoogleFonts.roboto(
                                               color: isUser ? Colors.amberAccent : Colors.cyanAccent,
                                               fontWeight: FontWeight.w700,
                                               fontSize: 12.5,
@@ -385,7 +385,7 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                                           ),
                                           TextSpan(
                                             text: msg['message'] ?? '',
-                                            style: GoogleFonts.poppins(
+                                            style: GoogleFonts.roboto(
                                               color: Colors.white,
                                               fontSize: 12.5,
                                               fontWeight: FontWeight.w400,
@@ -439,14 +439,14 @@ class _FullscreenLivePlayerScreenState extends State<FullscreenLivePlayerScreen>
                                       controller: _chatController,
                                       textInputAction: TextInputAction.send,
                                       onSubmitted: (_) => _sendUserComment(),
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.roboto(
                                         color: Colors.white,
                                         fontSize: 13.5,
                                         fontWeight: FontWeight.w400,
                                       ),
                                       decoration: InputDecoration(
                                         hintText: 'Say something...',
-                                        hintStyle: GoogleFonts.poppins(
+                                        hintStyle: GoogleFonts.roboto(
                                           color: Colors.white.withOpacity(0.55),
                                           fontSize: 13,
                                         ),
@@ -604,7 +604,7 @@ class _LivePulsingBadgeState extends State<_LivePulsingBadge> with SingleTickerP
           ),
           child: Text(
             'LIVE',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.roboto(
               color: Colors.white,
               fontSize: 10,
               fontWeight: FontWeight.bold,

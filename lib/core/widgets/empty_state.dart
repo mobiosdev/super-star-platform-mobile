@@ -31,7 +31,7 @@ class EmptyState extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.roboto(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
@@ -42,7 +42,7 @@ class EmptyState extends StatelessWidget {
               Text(
                 subtitle!,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(fontSize: 14, color: AppColors.textSecondary),
+                style: GoogleFonts.roboto(fontSize: 14, color: AppColors.textSecondary),
               ),
             ],
             if (action != null && actionLabel != null) ...[

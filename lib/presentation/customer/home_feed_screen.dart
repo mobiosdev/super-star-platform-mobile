@@ -51,14 +51,14 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
     final feedState = ref.watch(feedProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: SuperstarAppBar(
         title: 'SuperStar',
         showBack: false,
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: const Icon(Icons.menu, color: AppColors.secondary),
+              icon: const Icon(Icons.menu, color: AppColors.primary),
               onPressed: () => Scaffold.of(context).openDrawer(),
             );
           },
@@ -173,6 +173,7 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
     return const [
       SliverToBoxAdapter(child: _FeedBannerCarousel()),
       SliverToBoxAdapter(child: _FeedLiveButton()),
+      SliverToBoxAdapter(child: _FacebookStoryCards()),
       SliverToBoxAdapter(child: FanLiveNowSection()),
     ];
   }
@@ -257,7 +258,7 @@ class _FeedLiveButtonState extends State<_FeedLiveButton> with SingleTickerProvi
                       const SizedBox(width: 10),
                       Text(
                         'WATCH LIVE',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.roboto(
                           color: AppColors.error,
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -386,6 +387,126 @@ class _FeedBannerCarouselState extends State<_FeedBannerCarousel> {
   }
 }
 
+class _FacebookStoryCards extends StatelessWidget {
+  const _FacebookStoryCards();
+
+  static const _stories = [
+    _StoryItem(
+      name: 'For the Fans',
+      image: 'assets/images/feed/bns_banner.jpg',
+      avatar: 'assets/images/feed/bns_banner.jpg',
+    ),
+    _StoryItem(
+      name: 'Backstage',
+      image: 'assets/images/feed/bns_banner1.jpg',
+      avatar: 'assets/images/feed/bns_banner.jpg',
+    ),
+    _StoryItem(
+      name: 'Live Night',
+      image: 'assets/images/feed/bns_banner2.jpg',
+      avatar: 'assets/images/feed/bns_banner.jpg',
+    ),
+    _StoryItem(
+      name: 'Fan Clip',
+      image: 'assets/images/feed/my_clip.png',
+      avatar: 'assets/images/feed/bns_banner.jpg',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      height: 186,
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+        scrollDirection: Axis.horizontal,
+        itemCount: _stories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          final story = _stories[index];
+          return SizedBox(
+            width: 106,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(story.image, fit: BoxFit.cover),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.18),
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.66),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        radius: 17,
+                        backgroundImage: AssetImage(story.avatar),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 8,
+                    right: 8,
+                    bottom: 8,
+                    child: Text(
+                      story.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        height: 1.1,
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: theme.dividerColor.withOpacity(0.5)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _StoryItem {
+  const _StoryItem({
+    required this.name,
+    required this.image,
+    required this.avatar,
+  });
+
+  final String name;
+  final String image;
+  final String avatar;
+}
+
 class _FansMenuDrawer extends ConsumerWidget {
   const _FansMenuDrawer();
 
@@ -441,7 +562,7 @@ class _FansMenuDrawer extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         user?.displayName ?? 'Nuwin Vinwath',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.roboto(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: AppColors.textPrimary,
@@ -472,7 +593,7 @@ class _FansMenuDrawer extends ConsumerWidget {
                 children: [
                   Text(
                     'Content Types',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -532,7 +653,7 @@ class _FansMenuDrawer extends ConsumerWidget {
                           ),
                           Text(
                             ct['label'] as String,
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.roboto(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                               color: AppColors.textPrimary,

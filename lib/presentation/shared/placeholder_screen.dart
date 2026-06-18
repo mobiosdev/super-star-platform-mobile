@@ -31,14 +31,14 @@ class PlaceholderScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 title,
-                style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+                style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w600),
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 8),
                 Text(
                   subtitle!,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(color: AppColors.textSecondary),
+                  style: GoogleFonts.roboto(color: AppColors.textSecondary),
                 ),
               ],
             ],

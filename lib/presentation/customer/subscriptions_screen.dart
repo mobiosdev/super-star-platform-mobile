@@ -49,7 +49,7 @@ class SubscriptionsScreen extends ConsumerWidget {
                 child: ListTile(
                   title: Text(
                     'Superstar ${sub.superstarId}',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text('${sub.tier ?? '—'} · ${sub.status ?? 'ACTIVE'}'),
                   trailing: IconButton(

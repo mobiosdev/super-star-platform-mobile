@@ -23,24 +23,25 @@ class SuperstarAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AppBar(
       leading: leading ??
           (showBack
               ? IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-                  color: AppColors.secondary,
+                  color: AppColors.primary,
                   onPressed: onBack ?? () => Navigator.maybePop(context),
                 )
               : null),
       title: Text(
         title,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.roboto(
           fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          color: theme.colorScheme.onSurface,
         ),
       ),
       actions: actions,
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       elevation: 0,
     );
   }

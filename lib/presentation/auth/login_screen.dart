@@ -83,7 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 32),
                 Text(
                   'Welcome back',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.roboto(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -92,7 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Sign in to SuperStar App',
-                  style: GoogleFonts.poppins(color: AppColors.textSecondary),
+                  style: GoogleFonts.roboto(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 28),
                 TextFormField(
@@ -124,7 +124,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 12),
                   Text(
                     _errorMessage(auth.error),
-                    style: GoogleFonts.poppins(color: AppColors.error, fontSize: 13),
+                    style: GoogleFonts.roboto(color: AppColors.error, fontSize: 13),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -140,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const Expanded(child: Divider()),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('or continue with', style: GoogleFonts.poppins(fontSize: 12)),
+                      child: Text('or continue with', style: GoogleFonts.roboto(fontSize: 12)),
                     ),
                     const Expanded(child: Divider()),
                   ],
@@ -156,7 +156,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 if (ApiConstants.useMockApi) ...[
                 const SizedBox(height: 32),
-                Text('Quick demo login', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                Text('Quick demo login', style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
@@ -176,7 +176,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 16),
                 Text(
                   'Tip: use customer@, admin@, superstar@, or superadmin@ in email',
-                  style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textSecondary),
+                  style: GoogleFonts.roboto(fontSize: 11, color: AppColors.textSecondary),
                   textAlign: TextAlign.center,
                 ),
                 ],
@@ -206,7 +206,7 @@ class _LogoHeader extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'SuperStar App',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.roboto(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

@@ -68,7 +68,7 @@ class _LogoutOutlinedButtonState extends ConsumerState<LogoutOutlinedButton> {
             : const Icon(Icons.logout_rounded, color: AppColors.error),
         label: Text(
           _loading ? 'Signing out…' : 'Sign out',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.error),
+          style: GoogleFonts.roboto(fontWeight: FontWeight.w600, color: AppColors.error),
         ),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),

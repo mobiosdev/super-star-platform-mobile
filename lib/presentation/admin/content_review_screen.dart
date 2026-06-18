@@ -87,7 +87,7 @@ class ContentReviewScreen extends ConsumerWidget {
                   // Content Title
                   Text(
                     item.title,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w700,
                       fontSize: 20,
                       color: AppColors.textPrimary,
@@ -109,7 +109,7 @@ class ContentReviewScreen extends ConsumerWidget {
                           children: [
                             Text(
                               'Submitted by',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.roboto(
                                 fontSize: 11,
                                 color: AppColors.textSecondary,
                               ),
@@ -117,7 +117,7 @@ class ContentReviewScreen extends ConsumerWidget {
                             const SizedBox(height: 4),
                             Text(
                               item.superstarName,
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                                 color: AppColors.textPrimary,
@@ -146,7 +146,7 @@ class ContentReviewScreen extends ConsumerWidget {
                   if (item.description != null && item.description!.isNotEmpty) ...[
                     Text(
                       'Content Details',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                         color: AppColors.textPrimary,
@@ -163,7 +163,7 @@ class ContentReviewScreen extends ConsumerWidget {
                       ),
                       child: Text(
                         item.description!,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.roboto(
                           fontSize: 13,
                           color: AppColors.textSecondary,
                           height: 1.5,
@@ -264,7 +264,7 @@ class _MetadataItem extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       fontSize: 10,
                       color: AppColors.textSecondary,
                     ),
@@ -272,7 +272,7 @@ class _MetadataItem extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textPrimary,

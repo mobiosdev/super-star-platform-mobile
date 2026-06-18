@@ -19,7 +19,7 @@ class HardcodedFeedVideo {
     required this.videoUrl,
     required this.thumbnailUrl,
     this.superstarId = 'demo-artist',
-    this.superstarAvatarUrl = 'https://i.pravatar.cc/150?u=demo-artist',
+    this.superstarAvatarUrl = 'assets/images/feed/bns_banner.jpg',
     this.likes = 0,
     this.comments = 0,
   });

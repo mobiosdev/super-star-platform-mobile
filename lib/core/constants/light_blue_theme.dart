@@ -27,7 +27,7 @@ abstract final class LightBlueTheme {
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.secondary,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.poppins(
+        titleTextStyle: GoogleFonts.roboto(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
@@ -52,13 +52,13 @@ abstract final class LightBlueTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
-        labelStyle: GoogleFonts.poppins(color: AppColors.textSecondary),
-        hintStyle: GoogleFonts.poppins(color: AppColors.textSecondary),
+        labelStyle: GoogleFonts.roboto(color: AppColors.textSecondary),
+        hintStyle: GoogleFonts.roboto(color: AppColors.textSecondary),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surface,
         selectedColor: AppColors.primary.withOpacity(0.2),
-        labelStyle: GoogleFonts.poppins(fontSize: 13, color: AppColors.textPrimary),
+        labelStyle: GoogleFonts.roboto(fontSize: 13, color: AppColors.textPrimary),
         side: const BorderSide(color: AppColors.border),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -80,7 +80,7 @@ abstract final class LightBlueTheme {
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 15),
+          textStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
       cardTheme: CardThemeData(
@@ -96,14 +96,14 @@ abstract final class LightBlueTheme {
 
   static TextTheme get _textTheme {
     return TextTheme(
-      displayLarge: GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
-      headlineMedium: GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 22),
-      titleLarge: GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 18),
-      titleMedium: GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w500, fontSize: 16),
-      bodyLarge: GoogleFonts.poppins(color: AppColors.textPrimary, fontSize: 15),
-      bodyMedium: GoogleFonts.poppins(color: AppColors.textPrimary, fontSize: 14),
-      bodySmall: GoogleFonts.poppins(color: AppColors.textSecondary, fontSize: 12),
-      labelLarge: GoogleFonts.poppins(color: AppColors.textSecondary, fontWeight: FontWeight.w500, fontSize: 12),
+      displayLarge: GoogleFonts.roboto(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+      headlineMedium: GoogleFonts.roboto(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 22),
+      titleLarge: GoogleFonts.roboto(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 18),
+      titleMedium: GoogleFonts.roboto(color: AppColors.textPrimary, fontWeight: FontWeight.w500, fontSize: 16),
+      bodyLarge: GoogleFonts.roboto(color: AppColors.textPrimary, fontSize: 15),
+      bodyMedium: GoogleFonts.roboto(color: AppColors.textPrimary, fontSize: 14),
+      bodySmall: GoogleFonts.roboto(color: AppColors.textSecondary, fontSize: 12),
+      labelLarge: GoogleFonts.roboto(color: AppColors.textSecondary, fontWeight: FontWeight.w500, fontSize: 12),
     );
   }
 

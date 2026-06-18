@@ -80,11 +80,11 @@ class _SuperstarTile extends StatelessWidget {
         ),
         title: Text(
           star.displayName ?? 'Superstar',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
           [star.category, if (star.verified) 'Verified'].whereType<String>().join(' · '),
-          style: GoogleFonts.poppins(fontSize: 12, color: AppColors.textSecondary),
+          style: GoogleFonts.roboto(fontSize: 12, color: AppColors.textSecondary),
         ),
         trailing: const Icon(Icons.chevron_right),
       ),

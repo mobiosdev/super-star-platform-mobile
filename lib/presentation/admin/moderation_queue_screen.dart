@@ -236,7 +236,7 @@ class _BulkActionBar extends StatelessWidget {
       color: AppColors.surface,
       child: Row(
         children: [
-          Text('$count selected', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+          Text('$count selected', style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
           const Spacer(),
           TextButton(
             onPressed: onApprove,
@@ -332,7 +332,7 @@ class _QueueCard extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       modItem.superstarName,
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.roboto(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                         color: AppColors.textPrimary,
@@ -345,7 +345,7 @@ class _QueueCard extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 modItem.title,
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.roboto(
                                   fontSize: 12,
                                   color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w500,
@@ -363,7 +363,7 @@ class _QueueCard extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       DateFormat.MMMd().add_jm().format(modItem.submittedAt),
-                                      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.textSecondary),
+                                      style: GoogleFonts.roboto(fontSize: 10, color: AppColors.textSecondary),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -389,7 +389,7 @@ class _QueueCard extends StatelessWidget {
                         ),
                         child: Text(
                           modItem.description!,
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.roboto(
                             fontSize: 11,
                             color: AppColors.textSecondary,
                             height: 1.3,

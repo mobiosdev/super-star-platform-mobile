@@ -364,7 +364,7 @@ class _TopBar extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     'LIVE · $duration',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
@@ -376,7 +376,7 @@ class _TopBar extends StatelessWidget {
           ] else
             Text(
               'Preview',
-              style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
+              style: GoogleFonts.roboto(color: Colors.white70, fontSize: 14),
             ),
           const Spacer(),
           const SizedBox(width: 48),
@@ -429,10 +429,10 @@ class _BottomControls extends StatelessWidget {
           if (!isLive) ...[
             TextField(
               controller: titleController,
-              style: GoogleFonts.poppins(color: Colors.white),
+              style: GoogleFonts.roboto(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Stream title',
-                hintStyle: GoogleFonts.poppins(color: Colors.white54),
+                hintStyle: GoogleFonts.roboto(color: Colors.white54),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.12),
                 border: OutlineInputBorder(
@@ -444,10 +444,10 @@ class _BottomControls extends StatelessWidget {
             const SizedBox(height: 10),
             TextField(
               controller: messageController,
-              style: GoogleFonts.poppins(color: Colors.white),
+              style: GoogleFonts.roboto(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Message to fans',
-                hintStyle: GoogleFonts.poppins(color: Colors.white54),
+                hintStyle: GoogleFonts.roboto(color: Colors.white54),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.12),
                 border: OutlineInputBorder(
@@ -459,10 +459,10 @@ class _BottomControls extends StatelessWidget {
             const SizedBox(height: 10),
             TextField(
               controller: streamUrlController,
-              style: GoogleFonts.poppins(color: Colors.white),
+              style: GoogleFonts.roboto(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Stream URL (optional)',
-                hintStyle: GoogleFonts.poppins(color: Colors.white54),
+                hintStyle: GoogleFonts.roboto(color: Colors.white54),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.12),
                 border: OutlineInputBorder(
@@ -511,7 +511,7 @@ class _BottomControls extends StatelessWidget {
                     : isLive
                         ? 'End stream'
                         : 'Go Live',
-                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600),
+                style: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -550,7 +550,7 @@ class _ControlButton extends StatelessWidget {
               child: Icon(icon, color: Colors.white, size: 26),
             ),
             const SizedBox(height: 6),
-            Text(label, style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12)),
+            Text(label, style: GoogleFonts.roboto(color: Colors.white70, fontSize: 12)),
           ],
         ),
       ),
@@ -582,7 +582,7 @@ class _ErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(color: Colors.white),
+              style: GoogleFonts.roboto(color: Colors.white),
             ),
             const SizedBox(height: 24),
             FilledButton(onPressed: onRetry, child: const Text('Try again')),

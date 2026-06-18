@@ -31,7 +31,7 @@ class SuperadminSuperstarsScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   'Platform Superstars',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.roboto(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
@@ -40,7 +40,7 @@ class SuperadminSuperstarsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Verify, manage, and monitor creator accounts. Full management UI coming soon.',
-                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.textSecondary),
+                  style: GoogleFonts.roboto(fontSize: 14, color: AppColors.textSecondary),
                 ),
               ],
             ),

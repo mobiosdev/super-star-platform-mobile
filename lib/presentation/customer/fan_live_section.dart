@@ -41,7 +41,7 @@ class FanLiveNowSection extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Text(
                     'Live now',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       color: AppColors.textPrimary,
@@ -101,7 +101,7 @@ class _LiveChip extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     'LIVE',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       color: AppColors.error,
                       fontWeight: FontWeight.bold,
                       fontSize: 11,
@@ -114,14 +114,14 @@ class _LiveChip extends StatelessWidget {
                 artist.displayName ?? 'Artist',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13),
+                style: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 13),
               ),
               if (artist.title != null)
                 Text(
                   artist.title!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textSecondary),
+                  style: GoogleFonts.roboto(fontSize: 11, color: AppColors.textSecondary),
                 ),
             ],
           ),

@@ -47,7 +47,7 @@ class MessagesScreen extends ConsumerWidget {
               return ListTile(
                 title: Text(
                   m.senderName ?? m.recipientName ?? 'Message',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text(m.body, maxLines: 2, overflow: TextOverflow.ellipsis),
                 trailing: m.isRead

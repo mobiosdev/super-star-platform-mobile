@@ -118,7 +118,7 @@ class _NotificationTile extends StatelessWidget {
                   children: [
                     Text(
                       notification.superstarName ?? 'Artist',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
                       ),
@@ -126,7 +126,7 @@ class _NotificationTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.roboto(
                         fontSize: 13,
                         color: AppColors.textSecondary,
                       ),
@@ -135,7 +135,7 @@ class _NotificationTile extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         DateFormat.MMMd().add_jm().format(notification.createdAt!.toLocal()),
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.roboto(
                           fontSize: 11,
                           color: AppColors.textSecondary,
                         ),

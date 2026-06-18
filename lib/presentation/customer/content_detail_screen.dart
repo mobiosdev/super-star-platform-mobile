@@ -66,7 +66,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
         : ref.watch(_commentsProvider(widget.contentId));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const SuperstarAppBar(title: 'Post'),
       body: content.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -98,18 +98,18 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                           children: [
                             Text(
                               item.superstarName ?? 'Superstar',
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w700,
                                 fontSize: 14,
-                                color: AppColors.textPrimary,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                             if (item.createdAt != null)
                               Text(
                                 DateFormat.MMMd().add_jm().format(item.createdAt!),
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.roboto(
                                   fontSize: 11,
-                                  color: AppColors.textSecondary,
+                                  color: Theme.of(context).textTheme.bodySmall?.color,
                                 ),
                               ),
                           ],
@@ -140,9 +140,11 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                         Expanded(
                           child: Text(
                             item.title ?? 'Untitled',
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.roboto(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              height: 1.3,
                             ),
                           ),
                         ),
@@ -150,7 +152,14 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(item.body ?? '', style: GoogleFonts.poppins()),
+                    Text(
+                      item.body ?? '',
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        height: 1.32,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -165,7 +174,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                       ],
                     ),
                     const Divider(height: 32),
-                    Text('Comments', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                    Text('Comments', style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     comments.when(
                       loading: () => const Padding(
@@ -177,7 +186,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                         if (list.isEmpty) {
                           return Text(
                             'No comments yet',
-                            style: GoogleFonts.poppins(color: AppColors.textSecondary),
+                            style: GoogleFonts.roboto(color: AppColors.textSecondary),
                           );
                         }
                         return Column(
@@ -202,7 +211,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                   child: isDemo
                       ? Text(
                           'Demo video — likes and comments are not synced to the server.',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.roboto(
                             fontSize: 12,
                             color: AppColors.textSecondary,
                           ),

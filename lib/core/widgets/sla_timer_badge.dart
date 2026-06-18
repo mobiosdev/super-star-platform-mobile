@@ -37,7 +37,7 @@ class SlaTimerBadge extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             _label,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.roboto(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: _color,

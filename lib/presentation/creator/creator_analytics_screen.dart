@@ -69,7 +69,7 @@ class _AnalyticsCard extends StatelessWidget {
             flex: 2,
             child: Text(
               _humanizeKey(entry.key),
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 color: AppColors.textPrimary,
               ),
@@ -81,7 +81,7 @@ class _AnalyticsCard extends StatelessWidget {
             child: Text(
               _formatValue(entry.value),
               textAlign: TextAlign.right,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w600,
                 color: AppColors.secondary,
               ),

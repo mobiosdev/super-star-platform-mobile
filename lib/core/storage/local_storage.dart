@@ -17,6 +17,7 @@ class LocalStorage {
   static const String _userIdKey = 'user_id';
   static const String _emailKey = 'email';
   static const String _superstarIdKey = 'superstar_id';
+  static const String _themeModeKey = 'theme_mode';
 
   Box<dynamic>? _box;
 
@@ -44,6 +45,7 @@ class LocalStorage {
   String? getUserId() => box.get(_userIdKey) as String?;
   String? getEmail() => box.get(_emailKey) as String?;
   String? getSuperstarId() => box.get(_superstarIdKey) as String?;
+  String? getThemeMode() => box.get(_themeModeKey) as String?;
 
   Future<void> saveTokens({required String access, required String refresh}) async {
     await box.put(_accessTokenKey, access);
@@ -69,6 +71,10 @@ class LocalStorage {
 
   Future<void> saveSuperstarId(String id) async {
     await box.put(_superstarIdKey, id);
+  }
+
+  Future<void> saveThemeMode(String mode) async {
+    await box.put(_themeModeKey, mode);
   }
 
   Future<void> clearSession() async {

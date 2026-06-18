@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/light_blue_theme.dart';
+import '../../core/constants/bns_music_theme.dart';
 import '../../core/widgets/logout_button.dart';
 import '../../core/widgets/superstar_app_bar.dart';
 import '../../domain/entities/user.dart';
 import '../providers/auth_provider.dart';
+import '../providers/theme_mode_provider.dart';
 
 /// Account screen with sign-out (calls `POST /auth/logout`).
 class AccountProfileScreen extends ConsumerStatefulWidget {
@@ -25,7 +26,7 @@ class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
     final auth = ref.watch(authStateProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: SuperstarAppBar(title: 'My Profile', showBack: widget.showBack),
       body: auth.when(
         loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
@@ -45,12 +46,15 @@ class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
   }
 
   Widget _buildProfile(BuildContext context, AppUser user) {
+    final theme = Theme.of(context);
+    final darkMode = ref.watch(themeModeProvider) == ThemeMode.dark;
+
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
         Container(
           padding: const EdgeInsets.all(20),
-          decoration: LightBlueTheme.cardDecoration(),
+          decoration: BnsMusicTheme.cardDecoration(context),
           child: Row(
             children: [
               CircleAvatar(
@@ -61,10 +65,10 @@ class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
                 child: user.avatarUrl == null
                     ? Text(
                         user.displayName.isNotEmpty ? user.displayName[0].toUpperCase() : '?',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.roboto(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.secondary,
+                          color: AppColors.primary,
                         ),
                       )
                     : null,
@@ -76,18 +80,18 @@ class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
                   children: [
                     Text(
                       user.displayName,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.roboto(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       user.email,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.roboto(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: theme.textTheme.bodySmall?.color,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -96,6 +100,31 @@ class _AccountProfileScreenState extends ConsumerState<AccountProfileScreen> {
                 ),
               ),
             ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          decoration: BnsMusicTheme.cardDecoration(context, withShadow: false),
+          child: SwitchListTile(
+            value: darkMode,
+            onChanged: (value) => ref.read(themeModeProvider.notifier).setDarkMode(value),
+            activeColor: AppColors.primary,
+            secondary: Icon(
+              darkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              color: AppColors.primary,
+            ),
+            title: Text(
+              'Dark mode',
+              style: GoogleFonts.roboto(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            subtitle: Text(
+              darkMode ? 'Using dark BNS theme' : 'Using light BNS theme',
+              style: GoogleFonts.roboto(color: theme.textTheme.bodySmall?.color),
+            ),
           ),
         ),
         const SizedBox(height: 32),
@@ -119,7 +148,7 @@ class _RoleChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.roboto(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.secondary,

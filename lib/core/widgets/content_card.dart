@@ -26,22 +26,23 @@ class ContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final cardRadius = isTablet ? 16.0 : 0.0;
 
     return Container(
       margin: EdgeInsets.only(bottom: isTablet ? 16 : 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(cardRadius),
         border: isTablet
             ? Border.all(
-                color: Colors.white.withOpacity(0.6),
+                color: theme.dividerColor,
                 width: 1.5,
               )
             : Border(
                 bottom: BorderSide(
-                  color: AppColors.border.withOpacity(0.5),
+                  color: theme.dividerColor,
                   width: 1.0,
                 ),
               ),
@@ -71,12 +72,12 @@ class ContentCard extends StatelessWidget {
                   children: [
                     Text(
                       post.caption,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: AppColors.textPrimary,
-                        height: 1.4,
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        color: theme.colorScheme.onSurface,
+                        height: 1.32,
                       ),
-                      maxLines: 3,
+                      maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 10),
@@ -119,6 +120,7 @@ class _StatPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -133,10 +135,10 @@ class _StatPill extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             count,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.roboto(
               fontSize: 11.5,
               fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
         ],
@@ -152,6 +154,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ListTile(
       onTap: onProfileTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -169,20 +172,29 @@ class _Header extends StatelessWidget {
           padding: const EdgeInsets.all(1.5),
           child: CircleAvatar(
             radius: 18,
-            backgroundImage: CachedNetworkImageProvider(post.superstarAvatarUrl),
+            backgroundImage: _avatarProvider(post.superstarAvatarUrl),
           ),
         ),
       ),
       title: Text(
         post.superstarName,
-        style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13.5),
+        style: GoogleFonts.roboto(
+          fontWeight: FontWeight.w700,
+          fontSize: 13.5,
+          color: theme.colorScheme.onSurface,
+        ),
       ),
       subtitle: Text(
         DateFormat.MMMd().add_jm().format(post.createdAt),
-        style: GoogleFonts.poppins(fontSize: 10.5, color: AppColors.primary),
+        style: GoogleFonts.roboto(fontSize: 10.5, color: theme.textTheme.bodySmall?.color),
       ),
       trailing: Icon(Icons.more_horiz, color: AppColors.textSecondary),
     );
+  }
+
+  ImageProvider _avatarProvider(String url) {
+    if (url.startsWith('assets/')) return AssetImage(url);
+    return CachedNetworkImageProvider(url);
   }
 }
 
@@ -272,7 +284,7 @@ class _LockedOverlay extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           '${tier.label} Content',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.roboto(
             fontWeight: FontWeight.w600,
             color: Colors.white,
             fontSize: 15,
@@ -306,7 +318,7 @@ class _LockedOverlay extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               child: Text(
                 'Unlock with ${tier.label}',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.roboto(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,

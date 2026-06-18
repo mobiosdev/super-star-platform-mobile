@@ -57,7 +57,7 @@ class GradientCtaButton extends StatelessWidget {
                   ],
                   Text(
                     label,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.roboto(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
