@@ -59,7 +59,7 @@ abstract final class ApiContentTypes {
       case download:
         return 'Download';
       case liveAnnouncement:
-        return 'Live announcement';
+        return 'Live ann';
       case poll:
         return 'Poll';
       case merchLink:

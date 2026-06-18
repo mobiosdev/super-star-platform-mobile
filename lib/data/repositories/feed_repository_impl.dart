@@ -57,6 +57,13 @@ class FeedRepositoryImpl implements FeedRepository {
 
     final merged = [...hardcoded, ...apiPosts];
     merged.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    final myClipIndex = merged.indexWhere((post) => post.id == '${HardcodedFeedVideos.idPrefix}1');
+    if (myClipIndex != -1) {
+      final myClip = merged.removeAt(myClipIndex);
+      merged.insert(0, myClip);
+    }
+
     return merged;
   }
 
