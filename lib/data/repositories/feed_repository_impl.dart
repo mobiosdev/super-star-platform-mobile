@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/demo/hardcoded_feed_videos.dart';
 import '../../core/constants/api_constants.dart';
 import '../../domain/entities/feed_post.dart';
 import '../../domain/entities/subscription_tier.dart';
@@ -25,26 +26,38 @@ class FeedRepositoryImpl implements FeedRepository {
 
   @override
   Future<List<FeedPost>> fetchFeed({required int page, int limit = 10}) async {
+    final hardcoded = page == 1 ? HardcodedFeedVideos.asFeedPosts() : const <FeedPost>[];
+
+    List<FeedPost> apiPosts;
     if (ApiConstants.useMockApi) {
-      return _mockFeed(page: page, limit: limit);
+      apiPosts = await _mockFeed(page: page, limit: limit);
+    } else {
+      final superstarIds = await _resolveSuperstarIds();
+      if (superstarIds.isEmpty) {
+        apiPosts = [];
+      } else {
+        final futures = superstarIds.map(
+          (id) => _api.getFeed(superstarId: id, page: page, limit: limit),
+        );
+        final results = await Future.wait(futures);
+
+        apiPosts = <FeedPost>[];
+        for (final items in results) {
+          apiPosts.addAll(items.map((dto) => dto.toFeedPost()));
+        }
+
+        apiPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        if (apiPosts.length > limit) {
+          apiPosts = apiPosts.take(limit).toList();
+        }
+      }
     }
 
-    final superstarIds = await _resolveSuperstarIds();
-    if (superstarIds.isEmpty) return [];
+    if (hardcoded.isEmpty) return apiPosts;
 
-    final futures = superstarIds.map(
-      (id) => _api.getFeed(superstarId: id, page: page, limit: limit),
-    );
-    final results = await Future.wait(futures);
-
-    final posts = <FeedPost>[];
-    for (final items in results) {
-      posts.addAll(items.map((dto) => dto.toFeedPost()));
-    }
-
-    posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    if (posts.length <= limit) return posts;
-    return posts.take(limit).toList();
+    final merged = [...hardcoded, ...apiPosts];
+    merged.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return merged;
   }
 
   Future<List<String>> _resolveSuperstarIds() async {

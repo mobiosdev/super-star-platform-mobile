@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/repositories/content_repository.dart';
 import '../api/platform_api.dart';
 import '../models/content_dto.dart';
+import '../../core/demo/hardcoded_feed_videos.dart';
 
 final contentRepositoryProvider = Provider<ContentRepository>((ref) {
   return ContentRepositoryImpl(ref.watch(platformApiProvider));
@@ -45,7 +46,11 @@ class ContentRepositoryImpl implements ContentRepository {
       );
 
   @override
-  Future<ContentDto> getById(String id) => _api.getContent(id);
+  Future<ContentDto> getById(String id) async {
+    final hardcoded = HardcodedFeedVideos.contentById(id);
+    if (hardcoded != null) return hardcoded;
+    return _api.getContent(id);
+  }
 
   @override
   Future<List<ContentDto>> getFeed({
