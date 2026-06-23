@@ -83,14 +83,14 @@ abstract final class LightBlueTheme {
           textStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
-      cardTheme: CardThemeData(
-        color: AppColors.background,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: AppColors.border, width: 1),
-        ),
-      ),
+      // cardTheme: CardThemeData(
+      //   color: AppColors.background,
+      //   elevation: 0,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(16),
+      //     side: const BorderSide(color: AppColors.border, width: 1),
+      //   ),
+      // ),
     );
   }
 

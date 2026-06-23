@@ -83,14 +83,14 @@ abstract final class BnsMusicTheme {
           textStyle: GoogleFonts.roboto(fontWeight: FontWeight.w700, fontSize: 15),
         ),
       ),
-      cardTheme: CardThemeData(
-        color: surface,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: border, width: 1),
-        ),
-      ),
+      // cardTheme: CardThemeData(
+      //   color: surface,
+      //   elevation: 0,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(10),
+      //     side: BorderSide(color: border, width: 1),
+      //   ),
+      // ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -18,10 +18,12 @@ class HardcodedFeedVideo {
     required this.caption,
     required this.videoUrl,
     required this.thumbnailUrl,
+    this.mediaType = 'video',
     this.superstarId = 'demo-artist',
     this.superstarAvatarUrl = 'assets/images/feed/bns_banner.jpg',
     this.likes = 0,
     this.comments = 0,
+    this.minutesAgo = 0,
   });
 
   final String id;
@@ -31,8 +33,10 @@ class HardcodedFeedVideo {
   final String caption;
   final String videoUrl;
   final String thumbnailUrl;
+  final String mediaType;
   final int likes;
   final int comments;
+  final int minutesAgo;
 
   FeedPost toFeedPost() {
     return FeedPost(
@@ -42,13 +46,13 @@ class HardcodedFeedVideo {
       superstarAvatarUrl: superstarAvatarUrl,
       caption: caption,
       thumbnailUrl: thumbnailUrl,
-      mediaUrl: videoUrl,
-      mediaType: 'video',
+      mediaUrl: mediaType == 'video' ? videoUrl : null,
+      mediaType: mediaType,
       requiredTier: SubscriptionTier.silver,
       userTier: SubscriptionTier.platinum,
       likes: likes,
       comments: comments,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().subtract(Duration(minutes: minutesAgo)),
       isLocked: false,
     );
   }
@@ -61,13 +65,13 @@ class HardcodedFeedVideo {
       superstarAvatarUrl: superstarAvatarUrl,
       title: caption,
       body: caption,
-      contentType: 'VIDEO_HD',
+      contentType: mediaType == 'video' ? 'VIDEO_HD' : 'PHOTO',
       tierRequired: 'SILVER',
       thumbnailUrl: thumbnailUrl,
-      mediaUrl: videoUrl,
+      mediaUrl: mediaType == 'video' ? videoUrl : null,
       likes: likes,
       comments: comments,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().subtract(Duration(minutes: minutesAgo)),
       isLocked: false,
     );
   }
@@ -101,26 +105,40 @@ class HardcodedFeedVideos {
       thumbnailUrl: 'assets/images/feed/my_clip.png',
       likes: 128,
       comments: 12,
+      minutesAgo: 0,
     ),
     HardcodedFeedVideo(
       id: '${idPrefix}sample-1',
       superstarName: 'Aria Nova',
-      caption: 'Studio session preview — fan exclusive',
-      videoUrl:
-          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      thumbnailUrl: 'https://picsum.photos/seed/feed-video-1/800/500',
+      caption: 'Behind the scenes from today\'s shoot ✨',
+      videoUrl: '',
+      thumbnailUrl: 'assets/images/feed/bns_post1.jpg',
+      mediaType: 'image',
       likes: 842,
       comments: 56,
+      minutesAgo: 10,
     ),
     HardcodedFeedVideo(
       id: '${idPrefix}sample-2',
       superstarName: 'Jax Rivers',
-      caption: 'Live rehearsal highlights',
-      videoUrl:
-          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      thumbnailUrl: 'https://picsum.photos/seed/feed-video-2/800/500',
+      caption: 'Exclusive drop for my Gold members 🎵',
+      videoUrl: '',
+      thumbnailUrl: 'assets/images/feed/bns_post2.jpg',
+      mediaType: 'image',
       likes: 1204,
       comments: 89,
+      minutesAgo: 20,
+    ),
+    HardcodedFeedVideo(
+      id: '${idPrefix}sample-3',
+      superstarName: 'Luna Sky',
+      caption: 'Platinum-only studio session preview',
+      videoUrl: '',
+      thumbnailUrl: 'assets/images/feed/bns_post3.jpg',
+      mediaType: 'image',
+      likes: 954,
+      comments: 42,
+      minutesAgo: 30,
     ),
   ];
 }
