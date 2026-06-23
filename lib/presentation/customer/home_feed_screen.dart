@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/api_content_types.dart';
 import '../providers/auth_provider.dart';
-import '../../core/constants/light_blue_theme.dart';
 import '../../core/utils/responsive.dart';
 import '../../core/widgets/content_card.dart';
 import '../../core/widgets/empty_state.dart';
@@ -16,6 +15,8 @@ import '../../core/widgets/upgrade_prompt_modal.dart';
 import '../providers/feed_provider.dart';
 import 'fan_live_section.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/constants/bns_music_theme.dart';
+import '../providers/theme_mode_provider.dart';
 
 class HomeFeedScreen extends ConsumerStatefulWidget {
   const HomeFeedScreen({super.key});
@@ -514,6 +515,8 @@ class _FansMenuDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(authStateProvider);
     final user = userAsync.valueOrNull;
+    final theme = Theme.of(context);
+    final darkMode = ref.watch(themeModeProvider) == ThemeMode.dark;
 
     final contentTypes = [
       {'type': ApiContentTypes.post, 'label': 'Post', 'icon': Icons.article_outlined, 'color': Colors.blue},
@@ -530,26 +533,16 @@ class _FansMenuDrawer extends ConsumerWidget {
     ];
 
     return Drawer(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       child: SafeArea(
         child: Column(
           children: [
-            // Header Profile Section (Facebook style)
+            // Header Profile Section (Modern style)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+                decoration: BnsMusicTheme.cardDecoration(context),
                 child: Row(
                   children: [
                     CircleAvatar(
@@ -560,26 +553,37 @@ class _FansMenuDrawer extends ConsumerWidget {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        user?.displayName ?? 'Nuwin Vinwath',
-                        style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: AppColors.textPrimary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user?.displayName ?? 'Nuwin Vinwath',
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (user?.role.displayName != null) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              user!.role.displayName,
+                              style: GoogleFonts.roboto(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    const Icon(Icons.sync, color: AppColors.textSecondary, size: 20),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary, size: 20),
+                    IconButton(
+                      icon: const Icon(Icons.sync, size: 20),
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -596,14 +600,14 @@ class _FansMenuDrawer extends ConsumerWidget {
                     style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Content Types Grid (Squares)
+            // Content Types Grid (Squares) - Centered content
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -630,33 +634,24 @@ class _FansMenuDrawer extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.grey.shade100, width: 1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
+                      decoration: BnsMusicTheme.cardDecoration(context),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
                             ct['icon'] as IconData,
                             color: color,
                             size: 28,
                           ),
+                          const SizedBox(height: 8),
                           Text(
                             ct['label'] as String,
+                            textAlign: TextAlign.center,
                             style: GoogleFonts.roboto(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: AppColors.textPrimary,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ],
@@ -664,6 +659,44 @@ class _FansMenuDrawer extends ConsumerWidget {
                     ),
                   );
                 },
+              ),
+            ),
+
+            // Modern Footer with Theme Toggle Switch
+            Divider(color: theme.dividerColor, height: 1),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              color: theme.brightness == Brightness.dark 
+                  ? theme.cardColor 
+                  : theme.scaffoldBackgroundColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        darkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Dark Mode',
+                        style: GoogleFonts.roboto(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Switch(
+                    value: darkMode,
+                    activeColor: theme.colorScheme.primary,
+                    onChanged: (value) {
+                      ref.read(themeModeProvider.notifier).setDarkMode(value);
+                    },
+                  ),
+                ],
               ),
             ),
           ],
