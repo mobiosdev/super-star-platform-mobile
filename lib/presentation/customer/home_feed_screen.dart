@@ -14,6 +14,7 @@ import '../../core/widgets/superstar_app_bar.dart';
 import '../../core/widgets/upgrade_prompt_modal.dart';
 import '../providers/feed_provider.dart';
 import 'fan_live_section.dart';
+import 'story_view_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/bns_music_theme.dart';
 import '../providers/theme_mode_provider.dart';
@@ -428,10 +429,22 @@ class _FacebookStoryCards extends StatelessWidget {
           final story = _stories[index];
           return SizedBox(
             width: 106,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Stack(
-                fit: StackFit.expand,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => StoryViewScreen(
+                      image: story.image,
+                      avatar: story.avatar,
+                      name: story.name,
+                    ),
+                  ),
+                );
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  fit: StackFit.expand,
                 children: [
                   Image.asset(story.image, fit: BoxFit.cover),
                   DecoratedBox(
@@ -488,6 +501,7 @@ class _FacebookStoryCards extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
             ),
           );
         },
